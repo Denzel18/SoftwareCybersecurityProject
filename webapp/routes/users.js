@@ -4,7 +4,7 @@ const connection = require('../connect')
 
 /* GET users listing. */
 router.get('/', (req, res, next) => {
-  //TODO
+    res.send('respond with a resource');
 });
 
 module.exports = router;

@@ -8,9 +8,9 @@ const connection = mysql.createConnection({
 connection.connect(function (err) {
     if (err) throw err;
     console.log("Connected!");
-    connection.query("CREATE DATABASE cybersecurity", function (err, result) {
+    connection.query("CREATE DATABASE IF NOT EXISTS cybersecurity", function (err, result) {
         if (err) throw err;
         console.log("Database created");
     });
 });
-//module.exports=connection;
+module.exports=connection;
