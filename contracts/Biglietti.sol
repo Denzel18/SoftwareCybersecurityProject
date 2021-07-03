@@ -7,7 +7,8 @@ import "prova/contracts/GiornaleEventi.sol";
 contract Biglietti{
 
     address owner;
-
+    
+    Evento evento_;
     
     /*creato = senza sigillo, valido = con sigillo, annullato = evento annullato, invalidato = biglietto utilizzato*/
      
@@ -20,15 +21,20 @@ contract Biglietti{
         string timestamp;
         string prezzo;
         string cod_sigillo;
-        GiornaleEventi evento;
         StatoBiglietto state;
     }
 
     
-    constructor() {
+    //constructor() {
+    //    owner = msg.sender;
+    //    length = 0;
+    //}
+    
+    constructor(Evento _evento_) {
+        evento_ = _evento_;
+        //id_evento = evento_.id_evento;
         owner = msg.sender;
         length = 0;
-        
     }
     
     
@@ -41,11 +47,10 @@ contract Biglietti{
 
     uint256 length;
 
-    function storeItem(GiornaleEventi eventoP, string memory timestamp, string memory prezzo, TipologiaBiglietto tipoBiglietto) public restricted {
+    function storeItem(string memory timestamp, string memory prezzo, TipologiaBiglietto tipoBiglietto, StatoBiglietto statoBiglietto) public restricted {
         lista_biglietti.push(Biglietto({
             id: length,
-            state: StatoBiglietto.creato,
-            evento: eventoP, 
+            state: statoBiglietto,
             timestamp: timestamp,
             prezzo: prezzo, 
             cod_sigillo: "0",
@@ -60,6 +65,7 @@ contract Biglietti{
     }
     
     function setAnnulatoBiglietto(uint id) public restricted {
+        assert(evento_.isAnnulatoEvento());
         lista_biglietti[id].state = StatoBiglietto.annullato;
     }
     
@@ -78,5 +84,7 @@ contract Biglietti{
     
     /* NON SAPPIAMO SE SERVE */ 
     //function getBigliettoFromHash
-
+    
+    
+    
 }
