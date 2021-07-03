@@ -17,9 +17,6 @@ contract Evento  {
     uint capienza;
     StatoEvento stateEvento;
 
- 
-
- 
     constructor()  {
         owner = msg.sender;
         length = 0;
@@ -28,8 +25,6 @@ contract Evento  {
     modifier restricted()  {
         if (msg.sender == owner) _; // TODO: verificare
     }
- 
-
  
     Evento public evento;
  
@@ -50,6 +45,10 @@ contract Evento  {
     function getEvento() public view returns (Evento) {
         return evento;
     }
+    
+    function getLuogo() public view returns (string memory){
+        return Evento.luogo; 
+    }
  
     function isAnnulatoEvento() public view returns (bool) {
        if(Evento.stateEvento == StatoEvento.annullato){
@@ -58,14 +57,21 @@ contract Evento  {
             return false;
         }
     }
-    
  
     function setAnnulatoEvento() public restricted  {
         Evento.stateEvento = StatoEvento.annullato;
     }
- 
     
- 
+    function getStatoEvento() external view returns (string memory){
+        if(Evento.stateEvento == StatoEvento.attivo){
+            return "Attivo";
+        }else if(Evento.stateEvento == StatoEvento.annullato) {
+            return "Annullato"; 
+        }else{
+            return "Concluso";
+        }
+    }
+    
     function setConclusoEvento() public restricted  {
         Evento.stateEvento = StatoEvento.concluso;
     }

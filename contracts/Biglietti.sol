@@ -1,14 +1,13 @@
 // SPDX-License-Identifier: GPL-3.0
 pragma solidity >=0.4.22 <0.7.1; 
 pragma experimental ABIEncoderV2;
-import "prova/contracts/GiornaleEventi.sol";
+import "./Evento.sol";
 
 
 contract Biglietti{
 
     address owner;
-    
-    Evento evento_;
+    Evento evento;
     
     /*creato = senza sigillo, valido = con sigillo, annullato = evento annullato, invalidato = biglietto utilizzato*/
      
@@ -25,13 +24,8 @@ contract Biglietti{
     }
 
     
-    //constructor() {
-    //    owner = msg.sender;
-    //    length = 0;
-    //}
-    
-    constructor(Evento _evento_) {
-        evento_ = _evento_;
+    constructor(Evento evento_) {
+        evento = evento_;
         //id_evento = evento_.id_evento;
         owner = msg.sender;
         length = 0;
@@ -47,10 +41,10 @@ contract Biglietti{
 
     uint256 length;
 
-    function storeItem(string memory timestamp, string memory prezzo, TipologiaBiglietto tipoBiglietto, StatoBiglietto statoBiglietto) public restricted {
+    function storeItem(string memory timestamp, string memory prezzo, TipologiaBiglietto tipoBiglietto) public restricted {
         lista_biglietti.push(Biglietto({
             id: length,
-            state: statoBiglietto,
+            state: StatoBiglietto.creato,
             timestamp: timestamp,
             prezzo: prezzo, 
             cod_sigillo: "0",
@@ -59,14 +53,20 @@ contract Biglietti{
         length++;
     }
     
-    function setValidoBiglietto(uint id,string memory cod_sigillo) public restricted {
-        lista_biglietti[id].cod_sigillo = cod_sigillo; 
+    function setValidoBiglietto(uint id) public restricted {
         lista_biglietti[id].state = StatoBiglietto.valido;
     }
     
-    function setAnnulatoBiglietto(uint id) public restricted {
-        assert(evento_.isAnnulatoEvento());
-        lista_biglietti[id].state = StatoBiglietto.annullato;
+    
+    function getEventoInfo() public view returns (string memory){
+        return evento.getStatoEvento(); 
+    }
+    
+    function setAnnulatoBiglietto(uint id) public {// provare senza restricted public restricted
+        if(evento.isAnnulatoEvento() == true)
+            lista_biglietti[id].state = StatoBiglietto.annullato;
+        //assert(evento_.isAnnulatoEvento());
+        
     }
     
     function setInvalidatoBiglietto(uint id) public restricted {
@@ -80,11 +80,44 @@ contract Biglietti{
     function getLength() public view returns (uint256){
         return length;
     }
+    function getId(uint posx) public view returns (uint){
+        return  lista_biglietti[posx].id; 
+    }
     
+    function setSigillo(uint id, string memory sigillo,string memory codiceTransazione) public restricted {
+        if(statusPagamento(codiceTransazione) == true){
+            lista_biglietti[id].cod_sigillo = sigillo; 
+            setValidoBiglietto(id);
+        }
+
+    }
     
-    /* NON SAPPIAMO SE SERVE */ 
-    //function getBigliettoFromHash
+    function getSigillo(uint id) public view returns (string memory) {
+        return lista_biglietti[id].cod_sigillo; 
+    }
     
+    function getTipoBiglietto(uint id) public view returns (string memory) {
+        if(lista_biglietti[id].typeb == TipologiaBiglietto.tipologia1){
+            return "Tipologia 1";
+        }else if(lista_biglietti[id].typeb == TipologiaBiglietto.tipologia2){
+            return "Tipologia 2";
+        }else{
+            return "Tipologia 3";
+        }
+    }
+    
+    function statusPagamento(string memory codiceTransazione) public view returns (bool){
+        string memory OK = "OK"; 
+        if (keccak256(abi.encodePacked(codiceTransazione)) == keccak256(abi.encodePacked(OK))) {
+            return true; 
+        }else{
+            return false; 
+        }
+    }
+    
+    /*
+    0x0000000000000000000000000000000000000000
+    */
     
     
 }
