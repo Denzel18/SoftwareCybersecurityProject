@@ -42,16 +42,25 @@ contract Evento  {
         stateEvento = StatoEvento.attivo; 
      }
  
-    function getEvento() public view returns (Evento) {
-        return evento;
+    function getEvento() public view returns (address) {
+        if(owner==address(0)){
+            return owner;
+        }
     }
-    
     function getLuogo() public view returns (string memory){
         return Evento.luogo; 
     }
  
     function isAnnulatoEvento() public view returns (bool) {
        if(Evento.stateEvento == StatoEvento.annullato){
+            return true; 
+        }else{
+            return false;
+        }
+    }
+    
+    function isAttivoEvento() public view returns (bool) {
+       if(Evento.stateEvento == StatoEvento.attivo){
             return true; 
         }else{
             return false;

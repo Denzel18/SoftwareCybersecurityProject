@@ -7,7 +7,7 @@ import "./Evento.sol";
 contract Biglietti{
 
     address owner;
-    Evento evento;
+    address eventoAddress; 
     
     /*creato = senza sigillo, valido = con sigillo, annullato = evento annullato, invalidato = biglietto utilizzato*/
      
@@ -24,17 +24,15 @@ contract Biglietti{
     }
 
     
-    constructor(Evento evento_) {
-        evento = evento_;
+    constructor(address eventoAddress_) {
+        eventoAddress = eventoAddress_;
         //id_evento = evento_.id_evento;
         owner = msg.sender;
         length = 0;
     }
-    
-    
-    //Sembra utile per la sicurezza, metodi changeStato 
+
     modifier restricted() {
-        if (msg.sender == owner) _; // TODO: verificare
+        if (msg.sender == owner) _;
     }
 
     Biglietto[] public lista_biglietti;
@@ -59,18 +57,22 @@ contract Biglietti{
     
     
     function getEventoInfo() public view returns (string memory){
+        Evento evento = Evento(eventoAddress);
         return evento.getStatoEvento(); 
     }
     
-    function setAnnulatoBiglietto(uint id) public {// provare senza restricted public restricted
-        if(evento.isAnnulatoEvento() == true)
+    function setAnnulatoBiglietto(uint id) public restricted  {
+        Evento evento = Evento(eventoAddress);
+        if(evento.isAnnulatoEvento() == true){
             lista_biglietti[id].state = StatoBiglietto.annullato;
-        //assert(evento_.isAnnulatoEvento());
-        
+        }
     }
     
     function setInvalidatoBiglietto(uint id) public restricted {
-        lista_biglietti[id].state = StatoBiglietto.invalidato;
+        Evento evento = Evento(eventoAddress);
+        if(evento.isAttivoEvento() == true){
+            lista_biglietti[id].state = StatoBiglietto.invalidato;
+        }
     }
 
     function getGiornale() public view returns (Biglietto[] memory){
@@ -89,7 +91,6 @@ contract Biglietti{
             lista_biglietti[id].cod_sigillo = sigillo; 
             setValidoBiglietto(id);
         }
-
     }
     
     function getSigillo(uint id) public view returns (string memory) {
@@ -106,7 +107,7 @@ contract Biglietti{
         }
     }
     
-    function statusPagamento(string memory codiceTransazione) public view returns (bool){
+    function statusPagamento(string memory codiceTransazione) public restricted view returns (bool){
         string memory OK = "OK"; 
         if (keccak256(abi.encodePacked(codiceTransazione)) == keccak256(abi.encodePacked(OK))) {
             return true; 
@@ -114,10 +115,4 @@ contract Biglietti{
             return false; 
         }
     }
-    
-    /*
-    0x0000000000000000000000000000000000000000
-    */
-    
-    
 }
