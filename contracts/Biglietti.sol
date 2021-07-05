@@ -39,7 +39,8 @@ contract Biglietti{
 
     uint256 length;
 
-    function storeItem(string memory timestamp, string memory prezzo, TipologiaBiglietto tipoBiglietto) public restricted {
+    function storeItem(string memory timestamp, string memory prezzo, TipologiaBiglietto tipoBiglietto) public restricted { 
+        if(getPostiRimanenti() > 0) {
         lista_biglietti.push(Biglietto({
             id: length,
             state: StatoBiglietto.creato,
@@ -49,7 +50,8 @@ contract Biglietti{
             typeb: tipoBiglietto
         }));
         length++;
-    }
+        } 
+    } /*TODO: cosa fare in caso di posti insufficienti? */
     
     function setValidoBiglietto(uint id) public restricted {
         lista_biglietti[id].state = StatoBiglietto.valido;
@@ -79,7 +81,7 @@ contract Biglietti{
         return lista_biglietti;
     }
 
-    function getLength() public view returns (uint256){
+    function getLength() public view returns (uint){
         return length;
     }
     function getId(uint posx) public view returns (uint){
@@ -114,5 +116,12 @@ contract Biglietti{
         }else{
             return false; 
         }
+    }
+    
+    function getPostiRimanenti() public view returns (uint256) {
+        Evento evento = Evento(eventoAddress);
+        uint256 totali = evento.getCapienza();
+        uint256 rimanenti = totali - Biglietti.getLength();
+        return rimanenti;
     }
 }

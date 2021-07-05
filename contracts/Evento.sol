@@ -84,6 +84,10 @@ contract Evento  {
     function setConclusoEvento() public restricted  {
         Evento.stateEvento = StatoEvento.concluso;
     }
+    
+    function getCapienza() external view returns (uint256) {
+        return Evento.capienza;
+    }
  
 }
  
