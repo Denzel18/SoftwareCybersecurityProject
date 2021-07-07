@@ -50,6 +50,7 @@ function connectToDB() {
     });
 }
 
+connectToDB();
 
 module.exports = {
     connectToDB
