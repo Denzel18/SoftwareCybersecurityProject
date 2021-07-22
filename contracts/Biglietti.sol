@@ -24,7 +24,7 @@ contract Biglietti{
     }
 
     
-    constructor(address eventoAddress_) {
+    constructor(address eventoAddress_) public {
         eventoAddress = eventoAddress_;
         //id_evento = evento_.id_evento;
         owner = msg.sender;

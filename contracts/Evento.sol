@@ -17,7 +17,7 @@ contract Evento  {
     uint capienza;
     StatoEvento stateEvento;
 
-    constructor()  {
+    constructor() public {
         owner = msg.sender;
         length = 0;
     }
