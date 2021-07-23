@@ -8,11 +8,14 @@ contract Biglietti{
 
     address owner;
     address eventoAddress; 
+
     
     /*creato = senza sigillo, valido = con sigillo, annullato = evento annullato, invalidato = biglietto utilizzato*/
      
     enum StatoBiglietto {creato, valido, annullato, invalidato}
     enum TipologiaBiglietto {tipologia1, tipologia2, tipologia3}
+    
+    event Validato (string cod_sigillo, string evento, string prezzo);
 
     struct Biglietto {
         uint id;
@@ -51,10 +54,13 @@ contract Biglietti{
         }));
         length++;
         } 
-    } /*TODO: cosa fare in caso di posti insufficienti? */
+    } //TODO: cosa fare in caso di posti insufficienti? 
     
     function setValidoBiglietto(uint id) public restricted {
         lista_biglietti[id].state = StatoBiglietto.valido;
+        Evento evento = Evento(eventoAddress);
+        string memory nome_evento = evento.getTitolo();
+        emit Validato(this.getSigillo(id), nome_evento, this.getPrezzo(id));
     }
     
     
@@ -123,5 +129,9 @@ contract Biglietti{
         uint256 totali = evento.getCapienza();
         uint256 rimanenti = totali - Biglietti.getLength();
         return rimanenti;
+    }
+    
+    function getPrezzo(uint id) public view returns (string memory) {
+        return lista_biglietti[id].prezzo;
     }
 }

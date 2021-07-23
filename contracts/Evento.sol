@@ -47,6 +47,13 @@ contract Evento  {
             return owner;
         }
     }
+    
+    
+    function getTitolo() public view returns (string memory){
+        return Evento.titolo;
+    }
+    
+    
     function getLuogo() public view returns (string memory){
         return Evento.luogo; 
     }

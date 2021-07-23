@@ -12,7 +12,7 @@ class venditaLogService extends BlockchainContractService {
         let host = options.host ? options.host : "http://localhost:22000";
         let web3 = new Web3(host);
         let accountAddress = options.account ? options.account : (await web3.eth.getAccounts())[0];
-        return new PhotogrammetryLogService(contract.address, accountAddress, web3);
+        return new venditaLogService(contract.address, accountAddress, web3);
     }
 
     async getLog() {

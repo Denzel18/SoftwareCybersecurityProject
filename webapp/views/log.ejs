@@ -1,0 +1,34 @@
+<html>
+    <%- extend('layout') %>
+   
+        <div class="container mt-4">
+            <h1>Log delle vendite</h1>
+
+            <table class="table mt-4">
+                <thead>
+                  <tr>
+                    <th scope="col">ID</th>
+                    <th scope="col">Account blockchain acquirente</th>
+                    <th scope="col">Evento</th>
+                    <th scope="col">Data</th>
+                    <th scope="col">Costo</th>
+                    <th scope="col">Sigillo</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <% for(let item of log) { %> 
+                  <tr>
+                    <th scope="row"><%= item.id %></th>
+                    <td style="word-break:break-all;"><%= item.caller %></td>
+                    <td style="word-break:break-all;"><%= item.evento %></td>
+                    <td><%= item.timestamp %></td>
+                    <td><%= item.costo %></td>
+                    <td><%= item.cod_sigillo %></td>
+           
+                  </tr>
+                <% } %> 
+                </tbody>
+            </table>
+        </div>
+
+        
