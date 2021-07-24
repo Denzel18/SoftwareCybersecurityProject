@@ -1,7 +1,10 @@
 let isLoggedIn = (req, res, next) => {
-    if(req.session.user) {
+    /*if(req.session.user) {
         next();
-    } else return res.redirect("/login");
+    } else {
+    return res.redirect("/login");
+    }*/
+    next();
 }
 
 module.exports = isLoggedIn;

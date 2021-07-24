@@ -1,13 +1,19 @@
-var createError = require('http-errors');
-var express = require('express');
-var path = require('path');
-var cookieParser = require('cookie-parser');
-var logger = require('morgan');
+const createError = require('http-errors');
+const express = require('express');
+const path = require('path');
+const cookieParser = require('cookie-parser');
+const logger = require('morgan');
+const flash = require('connect-flash');
+const config = require('./config');
+const session = require('express-session');
 
-var indexRouter = require('./routes/index');
-var usersRouter = require('./routes/users');
+const eventoRouter = require('./routes/evento');
+const indexRouter = require('./routes/index');
+const usersRouter = require('./routes/users');
 
-var app = express();
+
+
+const app = express();
 
 /*
 app.use('/css', express.static(path.join(__dirname, './node_modules/bootstrap/dist/css')))
@@ -27,8 +33,16 @@ app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
 
+app.use(session({
+  secret: config.secret,
+  resave: false,
+  saveUninitialized: true,
+  cookie: { secure: false, maxAge: 60 * 60000 }
+}));
+app.use(flash());
 app.use('/', indexRouter);
 app.use('/users', usersRouter);
+app.use('/evento', eventoRouter);
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {
@@ -43,7 +57,7 @@ app.use(function(err, req, res, next) {
 
   // render the error page
   res.status(err.status || 500);
-  res.render('error');
+  res.render('error', {title: 'Error'});
 });
 
 module.exports = app;
