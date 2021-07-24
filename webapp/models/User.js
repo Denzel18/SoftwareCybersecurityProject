@@ -1,21 +1,48 @@
-const mysql = require('mysql');
+const { Sequelize, DataTypes } = require('sequelize');
+//const sequelize = new Sequelize('mysql://user:user@localhost:3306/cybersecurity');
 
-//non dobbiamo definire lo schema perché quello va fatto solo su MongoDB, qui basta creare la tabella (info dal web)
+const sequelize = new Sequelize('cybersecurity', 'user', 'user', {
+    dialect: 'mysql',
+    host: "localhost",
+    port: 3306
+  })
 
-var connection = mysql.createConnection({
-  host : 'localhost',
-  user: 'user',
-  password:'user'
-});
 
-connection.connect(function(err){
-   if(err){
-      console.log(err);
-   }
-  console.log("Connected...");  
- });
+const User = sequelize.define('Users', 
+  {
+      id: {
+        allowNull: false,
+        autoIncrement: true,
+        primaryKey: true,
+        type: DataTypes.INTEGER
+      },
+      name: {
+        allowNull: false,
+        type: DataTypes.STRING(100),
+        required: true
+      },
+      username: {
+        allowNull: false,
+        type: DataTypes.STRING(40),
+        required: true,
+        unique: true
+      },
+      password: {
+        allowNull: false,
+        type: DataTypes.STRING(100),
+        required: true
+      }
+  }, 
+  {
+    tableName: 'Users'
+  },
+  
+  );
+  User.prototype.validPassword = function(password){
+    return bcrypt.compareSync(password, this.password);
+  }
 
-connection.query('CREATE TABLE NOT EXISTS Users (id INT(11) UNSIGNED AUTO_INCREMENT PRIMARY KEY, username VARCHAR(128), password VARCHAR(128),account VARCHAR(128);', function(err) {
-  if (err) throw err;
-  console.log('Users TABLE created.');
-});
+  // Create all the defined tables in the specified database
+  sequelize.sync().then(() => console.log('Users table has been successfully created, if one doesn\'t exist.')).catch(error => console.log('The following error occured: ', error));
+  User.sync({ force: true });
+module.exports = User;
