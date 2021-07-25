@@ -4,7 +4,7 @@ const Web3 = require("web3");
 
 class bigliettiService extends BlockchainContractService {
     constructor(contractAddress, accountAddress, web3) {
-        super("Biglietti", contractAddress, accountAddress, web3);
+        super("Biglietto", contractAddress, accountAddress, web3);
     }
 
     static async getInstance(options) {
@@ -12,7 +12,7 @@ class bigliettiService extends BlockchainContractService {
         let host = options.host ? options.host : "http://localhost:22000";
         let web3 = new Web3(host);
         let accountAddress = options.account ? options.account : (await web3.eth.getAccounts())[0];
-        return new ImageStorageService(contract.address, accountAddress, web3);
+        return new bigliettiService(contract.address, accountAddress, web3);
     }
 
     async storeItem(timestamp, prezzo, tipoBiglietto) {

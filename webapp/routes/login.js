@@ -34,10 +34,25 @@ router.post('/login', (req, res) => {
 
     database.query("SELECT * FROM users WHERE username = '"+username+"'", {type: database.QueryTypes.SELECT}).then(results=>{
         console.log(results);
+        password_memo = results[0].password;
+        account_memo = results[0].account;
         if(results.length != 0){
             logger.info(`Tentativo di login positivo da parte di ${req.body.username}`);
-            //va verificato se la password è corretta
-            return res.redirect("/");
+            logger.info('pwd memorizzata : '+password_memo + ' pwd inserita : '+req.body.password)
+            bcrypt.compare(req.body.password, password_memo, (err, result) => {
+                if(result && !err) {
+                    req.session.user = {
+                        username: req.body.username,
+                        account: account_memo
+                    };
+                    logger.info(`Login eseguito dall'utente ${req.body.username}`);
+                    return res.redirect("/");
+                } else {
+                    logger.info(`Tentativo di login errato da parte di ${req.body.username}`);
+                    req.flash("error", "Utente o password errati, riprovare!");
+                    return res.redirect("/login");
+                }
+            });
         } else { 
             logger.info(`Tentativo di login errato da parte di ${req.body.username}`);
             req.flash("error", "Utente o password errati, riprovare!");

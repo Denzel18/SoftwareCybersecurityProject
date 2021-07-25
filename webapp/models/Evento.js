@@ -8,7 +8,7 @@ const sequelize = new Sequelize('cybersecurity', 'user', 'user', {
   })
 
 
-const Contratto = sequelize.define('Contratto', 
+const Evento = sequelize.define('Evento', 
   {
       id: {
         allowNull: false,
@@ -16,24 +16,19 @@ const Contratto = sequelize.define('Contratto',
         primaryKey: true,
         type: DataTypes.INTEGER
       },
-      name:{
-        allowNull: false,
-        type: DataTypes.STRING(100),
-        required: true
-      },
-      address: {
+      titolo: {
         allowNull: false,
         type: DataTypes.STRING(100),
         required: true
       },
   }, 
   {
-    tableName: 'Contratto'
+    tableName: 'Evento'
   },
   
   );
 
   // Create all the defined tables in the specified database
-  sequelize.sync().then(() => console.log('Contratto table has been successfully created, if one doesn\'t exist.')).catch(error => console.log('The following error occured: ', error));
-  Contratto.sync({ force: true });
-module.exports = Contratto;
+  sequelize.sync().then(() => console.log('Evento table has been successfully created, if one doesn\'t exist.')).catch(error => console.log('The following error occured: ', error));
+  Evento.sync({ force: true });
+module.exports = Evento;
