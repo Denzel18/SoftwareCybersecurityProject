@@ -1,9 +1,9 @@
 const express = require("express");
 const router = express.Router();
 const logger = require("../logger");
+const isLoggedIn = require("../middleware/login");
 
-//PROVA
-const bigliettiService = require("../services/bigliettiService");
+const BigliettiService = require("../services/bigliettiService");
 
 const Sequelize = require("sequelize");
 //const sequelize = new Sequelize('mysql://user:user@localhost:3306/cybersecurity');
@@ -56,14 +56,16 @@ router.get("/:id", (req, res) => {
     })
 });
 
-router.get("/biglietti/:id", (req, res) => {
+router.get("/biglietti/:id", isLoggedIn, async (req, res) => {
 
     const id = req.params.id
 
     logger.info('GET BIGLIETTI DATO ID EVENTO'+id)
 
-    let bigliettiService_ = new bigliettiService.getInstance({account: req.session.user.account});
-    let biglietti = bigliettiService_.getBiglietti();
+    
+
+    let BigliettiService_ = await BigliettiService.getInstance({account: req.session.user.account});
+    let biglietti = await BigliettiService_.getBiglietti();
     
     // database.query('SELECT * FROM Biglietto WHERE id_evento ='+id, {type: database.QueryTypes.SELECT}).then(results=>{
         
@@ -78,7 +80,7 @@ router.get("/biglietti/:id", (req, res) => {
 
     if(biglietti.length != 0){
         console.log(biglietti);
-        return res.render('evento',{ title: "Eventi", results: biglietti, user: req.session.user })
+        return res.render('biglietti',{ title: "Eventi", results: biglietti, user: req.session.user })
     }else{
         return res.redirect("/");
     }

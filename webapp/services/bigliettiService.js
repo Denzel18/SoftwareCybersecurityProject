@@ -4,15 +4,19 @@ const Web3 = require("web3");
 
 class bigliettiService extends BlockchainContractService {
     constructor(contractAddress, accountAddress, web3) {
-        super("Biglietto", contractAddress, accountAddress, web3);
+        super("Biglietti", contractAddress, accountAddress, web3);
     }
 
     static async getInstance(options) {
         let contract = await Contract.findOne({ name: "Biglietti" });
         let host = options.host ? options.host : "http://localhost:22000";
         let web3 = new Web3(host);
-        let accountAddress = options.account ? options.account : (await web3.eth.getAccounts())[0];
-        return new bigliettiService(contract.address, accountAddress, web3);
+        let accountAddress = options.account ? options.account : (await web3.eth.getAccounts())[0]; // questo restituisce  denisberno e non l'indirizzo
+        console.log('results - Account Address : '+accountAddress );
+        console.log('results - Contract : '+contract ); 
+        console.log('contract address : '+ contract.address);
+        //return new bigliettiService(contract.address, accountAddress, web3);
+        return new bigliettiService(contract.address, '0xed9d02e382b34818e88B88a309c7fe71E65f419d', web3); // node connectToEthereum.js [indirizzo]
     }
 
     async storeItem(timestamp, prezzo, tipoBiglietto) {

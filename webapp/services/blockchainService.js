@@ -3,7 +3,7 @@ const fs = require("fs");
 
 class BlockchainContractService {
     constructor(contract, contractAddress, account, web3) {
-        const ContractFile = JSON.parse(fs.readFileSync(`../build/contracts/${contract}.json`));
+        const ContractFile = JSON.parse(fs.readFileSync(`../contracts/build/${contract}.json`));
         this.contract = new web3.eth.Contract(ContractFile.abi, contractAddress);
         this.account = account;
     }
