@@ -1,8 +1,8 @@
-const BlockchainContractService = require("./blockchainservice");
+const ContractService = require('./ContractService');
 const Contract = require("../models/Contract");
 const Web3 = require("web3");
 
-class bigliettiService extends BlockchainContractService {
+class bigliettiService extends ContractService {
     constructor(contractAddress, accountAddress, web3) {
         super("Biglietti", contractAddress, accountAddress, web3);
     }

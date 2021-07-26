@@ -2,7 +2,7 @@ const fs = require("fs");
 
 class ContractService {
     constructor(contractName, contractAddress, account, web3) {
-        const ContractFile = JSON.parse(fs.readFileSync(`../contracts/build/${contractName}.json`));
+        const ContractFile = JSON.parse(fs.readFileSync(`../build/contracts/${contractName}.json`));
         this.contract = new web3.eth.Contract(ContractFile.abi, contractAddress);
         this.account = account;
     }

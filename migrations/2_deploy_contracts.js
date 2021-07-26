@@ -2,7 +2,7 @@ let Biglietti = artifacts.require("./Biglietti.sol");
 let Evento = artifacts.require("./Evento.sol");
 const Web3 = require("web3");
 
-module.exports = async function(deployer)  {
+module.exports = async function (deployer) {
     let web3 = new Web3("http://localhost:22000");
     let accounts = await web3.eth.getAccounts();
 

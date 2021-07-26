@@ -491,3 +491,5 @@
 2021-07-25T12:56:46.623Z [info]: pwd memorizzata : $2a$10$hlrOeRncW/ut8w7dUqhmHuYSC1oHLr1PVtKvXrI7fUmapZJAKANKq pwd inserita : prova
 2021-07-25T12:56:46.699Z [info]: Login eseguito dall'utente denis@prova.com
 2021-07-25T12:56:49.577Z [info]: GET BIGLIETTI DATO ID EVENTO2
+2021-07-26T06:04:28.945Z [info]: TEST EVENTO[object Object]
+2021-07-26T06:07:56.591Z [info]: TEST EVENTO[object Object]
