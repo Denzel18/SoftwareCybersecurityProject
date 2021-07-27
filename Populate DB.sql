@@ -1,10 +1,12 @@
 use cybersecurity;
 
+-- password "prova2"
 INSERT into Users (id, name, username, password, account ,createdAt, updatedAt)
-values ('4','denis rossi','denis@bernosssvchi.com','prova2','prova2','2010-10-10','2020-10-10'); 
+values ('4','denis rossi','denis@bernosssvchi.com','$2b$10$GaSy6CRRiQsGOAEFj0eCqOJd4geHzA/q45rn5JECBPvYQpZhNUAHK','prova2','2010-10-10','2020-10-10');
 
+-- password "prova2"
 INSERT into Users (id, name, username, password, account ,createdAt, updatedAt)
-values ('1','denis bianchi','denis@bernosvchiiiii.com','prova2','prova2','2010-10-10','2020-10-10'); 
+values ('1','denis bianchi','denis@bernosvchiiiii.com','$2b$10$GaSy6CRRiQsGOAEFj0eCqOJd4geHzA/q45rn5JECBPvYQpZhNUAHK','prova2','2010-10-10','2020-10-10');
 
 INSERT into Users (id, name, username, password, account ,createdAt, updatedAt) 
 values ('2','denis verdi','denis@prova.com','$2a$10$hlrOeRncW/ut8w7dUqhmHuYSC1oHLr1PVtKvXrI7fUmapZJAKANKq','denisberno','2010-10-10','2020-10-10'); 

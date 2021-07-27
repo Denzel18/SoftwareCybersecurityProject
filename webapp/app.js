@@ -34,20 +34,19 @@ const usersRouter = require("./routes/users");
 //  });
 
 
-const { Sequelize, DataTypes } = require('sequelize');
+const {Sequelize, DataTypes} = require('sequelize');
 const sequelize = new Sequelize('mysql://user:user@localhost:3306/cybersecurity');
 
 
 sequelize.authenticate()
     .then(() => {
-    console.log('Connection established.');
+        console.log('Connection established.');
     })
     .catch(err => {
         console.log('Connection failed.');
     });
 
-let accessLogStream = fs.createWriteStream(path.join(__dirname, 'logs', 'requests.log'), { flags: 'a' })
-
+let accessLogStream = fs.createWriteStream(path.join(__dirname, 'logs', 'requests.log'), {flags: 'a'})
 
 
 const app = express();
@@ -59,7 +58,6 @@ app.use('/js', express.static(path.join(__dirname, './node_modules/jquery/dist')
 */
 
 
-
 // view engine setup
 app.engine('ejs', require('express-ejs-extend'));
 app.set('views', path.join(__dirname, 'views'));
@@ -69,18 +67,18 @@ app.use(express.urlencoded({extended: true}));
 app.use(express.json());
 app.use(cookieParser(config.secret));
 app.use(session({
-  secret: config.secret,
-  resave: false,
-  saveUninitialized: true,
-  cookie: { secure: false, maxAge: 60 * 60000 }
+    secret: config.secret,
+    resave: false,
+    saveUninitialized: true,
+    cookie: {secure: false, maxAge: 60 * 60000}
 }));
 app.use(flash());
-app.use(morgan('combined', { stream: accessLogStream }));
-app.use(csurf({ cookie: true }));
+app.use(morgan('combined', {stream: accessLogStream}));
+app.use(csurf({cookie: true}));
 
 app.use(morgan('dev'));
 app.use(express.json());
-app.use(express.urlencoded({ extended: false }));
+app.use(express.urlencoded({extended: false}));
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
 
@@ -91,31 +89,31 @@ app.use('/evento', eventoRouter);
 
 
 // catch 404 and forward to error handler
-app.use(function(req, res, next) {
-  next(createError(404));
+app.use(function (req, res, next) {
+    next(createError(404));
 });
 
 app.get('/user', isLoggedIn, (req, res) => {
-  res.render("user", { user: req.session.user, title: "Pagina Utente" });
+    res.render("user", {user: req.session.user, title: "Pagina Utente"});
 });
 
-app.get('/', (req, res) => {
-  if(req.session.user)
-    return res.redirect("/user");
-  else
-    return res.redirect("/login");
-});
+// app.get('/', (req, res) => {
+//   if(req.session.user)
+//     return res.redirect("/user");
+//   else
+//     return res.redirect("/login");
+// });
 
 
 // error handler
-app.use(function(err, req, res, next) {
-  // set locals, only providing error in development
-  res.locals.message = err.message;
-  res.locals.error = req.app.get('env') === 'development' ? err : {};
+app.use(function (err, req, res, next) {
+    // set locals, only providing error in development
+    res.locals.message = err.message;
+    res.locals.error = req.app.get('env') === 'development' ? err : {};
 
-  // render the error page
-  res.status(err.status || 500);
-  res.render('error', {title: 'Error'});
+    // render the error page
+    res.status(err.status || 500);
+    res.render('error', {title: 'Error'});
 });
 
 module.exports = app;
