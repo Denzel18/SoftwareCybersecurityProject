@@ -5,6 +5,9 @@ const isLoggedIn = require("../middleware/login");
 
 const BigliettiService = require("../services/bigliettiService");
 
+
+const ContractModel = require('../models/Contract')
+
 const Sequelize = require("sequelize");
 //const sequelize = new Sequelize('mysql://user:user@localhost:3306/cybersecurity');
 
@@ -29,13 +32,14 @@ router.get('/', (req, res) => {
         
         if(results.length != 0){
             console.log(results);
+            //const bigliettiContract =  ContractModel.create({name: 'EVENTO', address:'Evento.address' });
+            console.log("Biglietti auto-generated ID:", bigliettiContract.id);
             return res.render('evento',{ title: "Eventi", results: results, user: req.session.user })
         }else{
             return res.redirect("/");
         }
 
     })
-
 });
 
 router.get("/:id", (req, res) => {
