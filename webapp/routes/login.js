@@ -15,6 +15,9 @@ const database = new Sequelize('cybersecurity', 'user', 'user', {
 const Usermodel = require("../models/User");
 const User = new Usermodel(database, Sequelize);
 
+bcrypt.hash('user', 10, function(err, hash) {
+    console.log('************' + hash);
+});
 
 router.get('/', (req, res) => {
     if (req.session.user)
@@ -38,14 +41,14 @@ router.post('/login', (req, res) => {
     password = req.body.password;
     logger.info('USERNAME : ' + username + ' - ' + password)
 
-    database.query('SELECT * FROM Users', {type: database.QueryTypes.SELECT}).then(results => {
+    database.query('SELECT * FROM user', {type: database.QueryTypes.SELECT}).then(results => {
         console.log(results);
     })
 
-    database.query("SELECT * FROM Users WHERE username = '" + username + "'", {type: database.QueryTypes.SELECT}).then(results => {
+    database.query("SELECT * FROM user WHERE username = '" + username + "'", {type: database.QueryTypes.SELECT}).then(results => {
         console.log(results);
 
-        if (results.length != 0) {
+        if (results.length !== 0) {
             password_memo = results[0].password;
             account_memo = results[0].account;
             logger.info(`Tentativo di login positivo da parte di ${req.body.username}`);

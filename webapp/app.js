@@ -2,11 +2,11 @@ const createError = require('http-errors');
 const express = require('express');
 const path = require('path');
 const cookieParser = require('cookie-parser');
-const morgan = require("morgan");
+const morgan = require('morgan');
 const flash = require('connect-flash');
 const config = require('./config');
 const session = require('express-session');
-const fs = require("fs");
+const fs = require('fs');
 const csurf = require('csurf')
 const mysql = require('mysql');
 
@@ -17,7 +17,8 @@ const eventoRouter = require('./routes/evento');
 //const usersRouter = require('./routes/users');
 const loginRouter = require("./routes/login");
 const usersRouter = require("./routes/users");
-
+const {Sequelize} = require('sequelize');
+const sequelize = new Sequelize('mysql://user:user@localhost:3306/cybersecurity');
 
 // var connection = mysql.createConnection({
 //   host : 'localhost',
@@ -32,10 +33,6 @@ const usersRouter = require("./routes/users");
 //    }
 //   console.log("Connected...App.js");  
 //  });
-
-
-const {Sequelize, DataTypes} = require('sequelize');
-const sequelize = new Sequelize('mysql://user:user@localhost:3306/cybersecurity');
 
 
 sequelize.authenticate()
