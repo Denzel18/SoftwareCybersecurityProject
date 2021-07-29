@@ -1,12 +1,12 @@
 const ContractService = require('./ContractService');
 const Contract = require("../models/Contract");
 const Web3 = require("web3");
+const createTaxSeal = require("../utils/TaxSealCreation")
 
 class bigliettiService extends ContractService {
     constructor(contractAddress, accountAddress, web3) {
         super("Biglietti", contractAddress, accountAddress, web3);
     }
-
     static async getInstance(options) {
         let contract = await Contract.findOne({ name: "Biglietti" });
         let host = options.host ? options.host : "http://localhost:22000";
@@ -68,5 +68,4 @@ class bigliettiService extends ContractService {
         return this.send(this.contract.methods.statusPagamento(codiceTransazione));
     }
 }
-
 module.exports = bigliettiService;

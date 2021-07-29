@@ -10,6 +10,7 @@
     "bootstrap": "^5.0.2",
     "connect-flash": "^0.1.1",
     "cookie-parser": "~1.4.4",
+    "crypto-random-string": "^4.0.0",
     "csurf": "^1.11.0",
     "date-and-time": "^1.0.1",
     "debug": "~2.6.9",

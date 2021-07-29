@@ -493,6 +493,136 @@
 2021-07-25T12:56:49.577Z [info]: GET BIGLIETTI DATO ID EVENTO2
 2021-07-26T06:04:28.945Z [info]: TEST EVENTO[object Object]
 2021-07-26T06:07:56.591Z [info]: TEST EVENTO[object Object]
+2021-07-26T06:37:40.416Z [info]: TEST EVENTO[object Object]
+2021-07-26T06:39:51.099Z [info]: TEST EVENTO IDbiglietti
+2021-07-26T06:41:01.541Z [info]: TEST LOGIN
+2021-07-26T06:41:01.542Z [info]: USERNAME :  - 
+2021-07-26T07:11:15.225Z [info]: TEST LOGIN
+2021-07-26T07:11:15.227Z [info]: USERNAME : denis@bernosssvchi.com' - prova2
+2021-07-26T07:11:31.012Z [info]: TEST LOGIN
+2021-07-26T07:11:31.013Z [info]: USERNAME : denis@prova.com - prova
+2021-07-26T07:20:21.553Z [info]: TEST LOGIN
+2021-07-26T07:20:21.556Z [info]: USERNAME : denis@prova.com - prova
+2021-07-26T07:27:09.151Z [info]: TEST LOGIN
+2021-07-26T07:27:09.154Z [info]: USERNAME : denis@prova.com - prova
+2021-07-26T07:27:09.173Z [info]: Tentativo di login positivo da parte di denis@prova.com
+2021-07-26T07:27:09.174Z [info]: pwd memorizzata : $2a$10$hlrOeRncW/ut8w7dUqhmHuYSC1oHLr1PVtKvXrI7fUmapZJAKANKq pwd inserita : prova
+2021-07-26T07:27:09.276Z [info]: Login eseguito dall'utente denis@prova.com
+2021-07-26T07:27:14.723Z [info]: TEST EVENTO[object Object]
+2021-07-26T07:27:19.248Z [info]: TEST EVENTO IDbiglietti
+2021-07-26T07:27:22.900Z [info]: GET BIGLIETTI DATO ID EVENTO2
+2021-07-26T07:30:05.307Z [info]: GET BIGLIETTI DATO ID EVENTO2
+2021-07-26T08:01:00.191Z [info]: TEST LOGIN
+2021-07-26T08:01:00.195Z [info]: USERNAME : denis@prova.com - user
+2021-07-26T08:01:00.208Z [info]: Tentativo di login errato da parte di denis@prova.com
+2021-07-26T08:01:05.642Z [info]: TEST LOGIN
+2021-07-26T08:01:05.642Z [info]: USERNAME : denis@prova.com - prova
+2021-07-26T08:01:05.644Z [info]: Tentativo di login errato da parte di denis@prova.com
+2021-07-26T08:01:16.457Z [info]: TEST LOGIN
+2021-07-26T08:01:16.457Z [info]: USERNAME : denis@prova.com - prova
+2021-07-26T08:01:16.465Z [info]: Tentativo di login positivo da parte di denis@prova.com
+2021-07-26T08:01:16.465Z [info]: pwd memorizzata : $2a$10$hlrOeRncW/ut8w7dUqhmHuYSC1oHLr1PVtKvXrI7fUmapZJAKANKq pwd inserita : prova
+2021-07-26T08:01:16.548Z [info]: Login eseguito dall'utente denis@prova.com
+2021-07-26T08:01:22.131Z [info]: TEST EVENTO[object Object]
+2021-07-26T08:03:45.142Z [info]: GET BIGLIETTI DATO ID EVENTO2
+2021-07-26T08:12:32.187Z [info]: GET BIGLIETTI DATO ID EVENTO2
+2021-07-26T08:14:32.193Z [info]: GET BIGLIETTI DATO ID EVENTO2
+2021-07-26T08:16:24.982Z [info]: TEST EVENTO[object Object]
+2021-07-26T08:16:30.612Z [info]: GET BIGLIETTI DATO ID EVENTO2
+2021-07-26T08:17:49.307Z [info]: TEST LOGIN
+2021-07-26T08:17:49.310Z [info]: USERNAME : denis@prova.com - prova
+2021-07-26T08:17:49.329Z [info]: Tentativo di login positivo da parte di denis@prova.com
+2021-07-26T08:17:49.329Z [info]: pwd memorizzata : $2a$10$hlrOeRncW/ut8w7dUqhmHuYSC1oHLr1PVtKvXrI7fUmapZJAKANKq pwd inserita : prova
+2021-07-26T08:17:49.442Z [info]: Login eseguito dall'utente denis@prova.com
+2021-07-26T08:17:52.357Z [info]: TEST EVENTO[object Object]
+2021-07-26T08:18:00.956Z [info]: GET BIGLIETTI DATO ID EVENTO2
+2021-07-26T08:19:10.630Z [info]: TEST LOGIN
+2021-07-26T08:19:10.633Z [info]: USERNAME : denis@prova.com - prova
+2021-07-26T08:19:10.662Z [info]: Tentativo di login positivo da parte di denis@prova.com
+2021-07-26T08:19:10.662Z [info]: pwd memorizzata : $2a$10$hlrOeRncW/ut8w7dUqhmHuYSC1oHLr1PVtKvXrI7fUmapZJAKANKq pwd inserita : prova
+2021-07-26T08:19:10.761Z [info]: Login eseguito dall'utente denis@prova.com
+2021-07-26T08:19:13.761Z [info]: TEST EVENTO[object Object]
+2021-07-26T08:21:41.618Z [info]: GET BIGLIETTI DATO ID EVENTO2
+2021-07-26T08:22:22.195Z [info]: TEST LOGIN
+2021-07-26T08:22:22.199Z [info]: USERNAME : denis@prova.com - prova
+2021-07-26T08:22:22.216Z [info]: Tentativo di login positivo da parte di denis@prova.com
+2021-07-26T08:22:22.216Z [info]: pwd memorizzata : $2a$10$hlrOeRncW/ut8w7dUqhmHuYSC1oHLr1PVtKvXrI7fUmapZJAKANKq pwd inserita : prova
+2021-07-26T08:22:22.302Z [info]: Login eseguito dall'utente denis@prova.com
+2021-07-26T08:22:28.216Z [info]: GET BIGLIETTI DATO ID EVENTO2
+2021-07-26T08:24:28.227Z [info]: GET BIGLIETTI DATO ID EVENTO2
+2021-07-26T08:26:28.296Z [info]: GET BIGLIETTI DATO ID EVENTO2
+2021-07-26T08:28:28.349Z [info]: GET BIGLIETTI DATO ID EVENTO2
+2021-07-26T08:30:28.402Z [info]: GET BIGLIETTI DATO ID EVENTO2
+2021-07-26T09:43:15.650Z [info]: TEST LOGIN
+2021-07-26T09:43:15.655Z [info]: USERNAME : denis@prova.com - prova
+2021-07-26T09:43:15.679Z [info]: Tentativo di login positivo da parte di denis@prova.com
+2021-07-26T09:43:15.680Z [info]: pwd memorizzata : $2a$10$hlrOeRncW/ut8w7dUqhmHuYSC1oHLr1PVtKvXrI7fUmapZJAKANKq pwd inserita : prova
+2021-07-26T09:43:15.771Z [info]: Login eseguito dall'utente denis@prova.com
+2021-07-26T09:43:18.518Z [info]: TEST EVENTO[object Object]
+2021-07-26T09:43:21.048Z [info]: TEST EVENTO ID2
+2021-07-26T09:44:31.963Z [info]: GET BIGLIETTI DATO ID EVENTO2
+2021-07-26T09:51:08.263Z [info]: TEST LOGIN
+2021-07-26T09:51:08.266Z [info]: USERNAME : denis@prova.com - prova
+2021-07-26T09:51:08.286Z [info]: Tentativo di login positivo da parte di denis@prova.com
+2021-07-26T09:51:08.286Z [info]: pwd memorizzata : $2a$10$hlrOeRncW/ut8w7dUqhmHuYSC1oHLr1PVtKvXrI7fUmapZJAKANKq pwd inserita : prova
+2021-07-26T09:51:08.380Z [info]: Login eseguito dall'utente denis@prova.com
+2021-07-26T09:51:11.255Z [info]: TEST EVENTO[object Object]
+2021-07-26T09:51:13.393Z [info]: TEST EVENTO ID2
+2021-07-26T09:51:17.171Z [info]: GET BIGLIETTI DATO ID EVENTO2
+2021-07-26T09:53:17.188Z [info]: GET BIGLIETTI DATO ID EVENTO2
+2021-07-26T18:11:39.220Z [info]: TEST LOGIN
+2021-07-26T18:11:39.223Z [info]: USERNAME : denis@prova.com - prova
+2021-07-26T18:11:39.244Z [info]: Tentativo di login positivo da parte di denis@prova.com
+2021-07-26T18:11:39.244Z [info]: pwd memorizzata : $2a$10$hlrOeRncW/ut8w7dUqhmHuYSC1oHLr1PVtKvXrI7fUmapZJAKANKq pwd inserita : prova
+2021-07-26T18:11:39.334Z [info]: Login eseguito dall'utente denis@prova.com
+2021-07-26T18:11:42.825Z [info]: TEST EVENTO[object Object]
+2021-07-26T18:11:47.296Z [info]: GET BIGLIETTI DATO ID EVENTO2
+2021-07-26T18:16:31.767Z [info]: TEST EVENTO[object Object]
+2021-07-26T18:16:42.994Z [info]: TEST LOGIN
+2021-07-26T18:16:42.994Z [info]: USERNAME : denis@prova.com - prova
+2021-07-26T18:16:43.011Z [info]: Tentativo di login positivo da parte di denis@prova.com
+2021-07-26T18:16:43.011Z [info]: pwd memorizzata : $2a$10$hlrOeRncW/ut8w7dUqhmHuYSC1oHLr1PVtKvXrI7fUmapZJAKANKq pwd inserita : prova
+2021-07-26T18:16:43.111Z [info]: Login eseguito dall'utente denis@prova.com
+2021-07-26T18:16:50.215Z [info]: GET BIGLIETTI DATO ID EVENTO2
+2021-07-26T18:18:19.394Z [info]: TEST EVENTO[object Object]
+2021-07-26T18:18:31.181Z [info]: GET BIGLIETTI DATO ID EVENTO2
+2021-07-26T18:19:17.962Z [info]: TEST LOGIN
+2021-07-26T18:19:17.964Z [info]: USERNAME : denis@prova.com - prova
+2021-07-26T18:19:17.986Z [info]: Tentativo di login positivo da parte di denis@prova.com
+2021-07-26T18:19:17.986Z [info]: pwd memorizzata : $2a$10$hlrOeRncW/ut8w7dUqhmHuYSC1oHLr1PVtKvXrI7fUmapZJAKANKq pwd inserita : prova
+2021-07-26T18:19:18.090Z [info]: Login eseguito dall'utente denis@prova.com
+2021-07-26T18:19:24.780Z [info]: GET BIGLIETTI DATO ID EVENTO2
+2021-07-26T18:20:13.195Z [info]: TEST EVENTO[object Object]
+2021-07-26T18:20:18.686Z [info]: GET BIGLIETTI DATO ID EVENTO2
+2021-07-26T18:20:40.738Z [info]: TEST EVENTO[object Object]
+2021-07-26T18:20:45.653Z [info]: GET BIGLIETTI DATO ID EVENTO2
+2021-07-26T18:22:45.677Z [info]: GET BIGLIETTI DATO ID EVENTO2
+2021-07-26T18:23:13.015Z [info]: GET BIGLIETTI DATO ID EVENTO2
+2021-07-26T18:23:32.420Z [info]: GET BIGLIETTI DATO ID EVENTO2
+2021-07-26T18:26:22.120Z [info]: TEST LOGIN
+2021-07-26T18:26:22.122Z [info]: USERNAME : denis@prova.com - prova
+2021-07-26T18:26:22.140Z [info]: Tentativo di login positivo da parte di denis@prova.com
+2021-07-26T18:26:22.140Z [info]: pwd memorizzata : $2a$10$hlrOeRncW/ut8w7dUqhmHuYSC1oHLr1PVtKvXrI7fUmapZJAKANKq pwd inserita : prova
+2021-07-26T18:26:22.225Z [info]: Login eseguito dall'utente denis@prova.com
+2021-07-26T18:26:27.344Z [info]: GET BIGLIETTI DATO ID EVENTO2
+2021-07-26T18:38:26.060Z [info]: TEST LOGIN
+2021-07-26T18:38:26.064Z [info]: USERNAME : denis@prova.com - prova
+2021-07-26T18:38:26.086Z [info]: Tentativo di login positivo da parte di denis@prova.com
+2021-07-26T18:38:26.086Z [info]: pwd memorizzata : $2a$10$hlrOeRncW/ut8w7dUqhmHuYSC1oHLr1PVtKvXrI7fUmapZJAKANKq pwd inserita : prova
+2021-07-26T18:38:26.173Z [info]: Login eseguito dall'utente denis@prova.com
+2021-07-26T18:38:41.306Z [info]: GET BIGLIETTI DATO ID EVENTO2
+2021-07-26T18:40:05.538Z [info]: TEST LOGIN
+2021-07-26T18:40:05.541Z [info]: USERNAME : denis@prova.com - prova
+2021-07-26T18:40:05.585Z [info]: Tentativo di login positivo da parte di denis@prova.com
+2021-07-26T18:40:05.585Z [info]: pwd memorizzata : $2a$10$hlrOeRncW/ut8w7dUqhmHuYSC1oHLr1PVtKvXrI7fUmapZJAKANKq pwd inserita : prova
+2021-07-26T18:40:05.681Z [info]: Login eseguito dall'utente denis@prova.com
+2021-07-26T18:40:12.162Z [info]: GET BIGLIETTI DATO ID EVENTO2
+2021-07-26T18:42:12.184Z [info]: GET BIGLIETTI DATO ID EVENTO2
+2021-07-26T18:44:12.240Z [info]: GET BIGLIETTI DATO ID EVENTO2
+2021-07-26T18:46:12.290Z [info]: GET BIGLIETTI DATO ID EVENTO2
+2021-07-26T18:48:12.335Z [info]: GET BIGLIETTI DATO ID EVENTO2
+2021-07-26T18:50:12.360Z [info]: GET BIGLIETTI DATO ID EVENTO2
+2021-07-26T18:52:12.403Z [info]: GET BIGLIETTI DATO ID EVENTO2
 2021-07-26T20:44:18.795Z [info]: TEST LOGIN
 2021-07-26T20:44:18.796Z [info]: USERNAME : denis@prova.com - prova
 2021-07-26T20:44:18.805Z [info]: Tentativo di login errato da parte di denis@prova.com
@@ -533,3 +663,29 @@
 2021-07-26T22:51:24.695Z [info]: TEST EVENTO[object Object]
 2021-07-26T22:51:49.795Z [info]: TEST EVENTO[object Object]
 2021-07-26T22:52:26.307Z [info]: TEST EVENTO[object Object]
+2021-07-29T07:09:10.939Z [info]: TEST LOGIN
+2021-07-29T07:09:10.941Z [info]: USERNAME : denis@prova.com - prova
+2021-07-29T07:09:27.344Z [info]: TEST EVENTO[object Object]
+2021-07-29T07:09:38.864Z [info]: TEST LOGIN
+2021-07-29T07:09:38.864Z [info]: USERNAME : denis@prova.com - prova
+2021-07-29T07:10:50.186Z [info]: TEST LOGIN
+2021-07-29T07:10:50.188Z [info]: USERNAME : denis@prova.com - prova
+2021-07-29T07:10:50.203Z [info]: Tentativo di login positivo da parte di denis@prova.com
+2021-07-29T07:10:50.203Z [info]: pwd memorizzata : $2a$10$hlrOeRncW/ut8w7dUqhmHuYSC1oHLr1PVtKvXrI7fUmapZJAKANKq pwd inserita : prova
+2021-07-29T07:10:50.306Z [info]: Login eseguito dall'utente denis@prova.com
+2021-07-29T07:10:53.455Z [info]: TEST EVENTO[object Object]
+2021-07-29T07:10:57.490Z [info]: GET BIGLIETTI DATO ID EVENTO2
+2021-07-29T07:15:56.237Z [info]: TEST EVENTO[object Object]
+2021-07-29T08:15:27.513Z [info]: TEST LOGIN
+2021-07-29T08:15:27.515Z [info]: USERNAME : denis@prova.com - prova
+2021-07-29T08:15:27.529Z [info]: Tentativo di login positivo da parte di denis@prova.com
+2021-07-29T08:15:27.529Z [info]: pwd memorizzata : $2a$10$hlrOeRncW/ut8w7dUqhmHuYSC1oHLr1PVtKvXrI7fUmapZJAKANKq pwd inserita : prova
+2021-07-29T08:15:27.638Z [info]: Login eseguito dall'utente denis@prova.com
+2021-07-29T08:15:57.440Z [info]: TEST EVENTO[object Object]
+2021-07-29T08:16:27.714Z [info]: GET BIGLIETTI DATO ID EVENTO2
+2021-07-29T08:17:18.631Z [info]: TEST LOGIN
+2021-07-29T08:17:18.633Z [info]: USERNAME : denis@prova.com - prova
+2021-07-29T08:17:18.650Z [info]: Tentativo di login positivo da parte di denis@prova.com
+2021-07-29T08:17:18.650Z [info]: pwd memorizzata : $2a$10$hlrOeRncW/ut8w7dUqhmHuYSC1oHLr1PVtKvXrI7fUmapZJAKANKq pwd inserita : prova
+2021-07-29T08:17:18.737Z [info]: Login eseguito dall'utente denis@prova.com
+2021-07-29T08:17:22.394Z [info]: GET BIGLIETTI DATO ID EVENTO2

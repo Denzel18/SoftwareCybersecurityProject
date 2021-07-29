@@ -84,7 +84,7 @@ contract Biglietti {
         }
     }
 
-    function getGiornale() public view returns (Biglietto[] memory){
+    function getGiornale() public view returns (Biglietto[] memory ) {
         return lista_biglietti;
     }
 
