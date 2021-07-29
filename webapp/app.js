@@ -81,12 +81,20 @@ app.use(express.static(path.join(__dirname, 'public')));
 
 
 app.use('/', loginRouter);
-app.use('/users', usersRouter);
+app.use('/user', usersRouter);
 app.use('/evento', eventoRouter);
 
+app.use((req, res, next) => {
+    res.locals.user = req.user;
+    next();
+});
+
 app.get('/', (req, res) => {
-    res.render("index", { title: 'Express' });
-}),
+    if(req.session.user)
+        return res.redirect("/user");
+    else
+        return res.redirect("/login");
+});
 
 
 // catch 404 and forward to error handler
@@ -94,17 +102,9 @@ app.use(function (req, res, next) {
     next(createError(404));
 });
 
-app.get('/user', isLoggedIn, (req, res) => {
+/*app.get('/user', isLoggedIn, (req, res) => {
     res.render("user", {user: req.session.user, title: "Pagina Utente"});
-});
-
-// app.get('/', (req, res) => {
-//   if(req.session.user)
-//     return res.redirect("/user");
-//   else
-//     return res.redirect("/login");
-// });
-
+});*/
 
 // error handler
 app.use(function (err, req, res, next) {

@@ -1,0 +1,26 @@
+<% extend('layout') %>
+<div class="card-header">
+    <h4>Benvenuto, <%= user.name%>!</h4>
+</div>
+<div class="card-body">
+    <div class="row">
+        <div class="col-sm-3">
+            <h6 class="mb-0">Nome</h6>
+        </div>
+        <div class="col-sm-9 text-secondary">
+            <%= user.name%>
+        </div>
+        <div class="col-sm-3">
+            <h6 class="mb-0">Username</h6>
+        </div>
+        <div class="col-sm-9 text-secondary">
+            <%= user.username%>
+        </div>
+        <div class="col-sm-3">
+            <h6 class="mb-0">Account</h6>
+        </div>
+        <div class="col-sm-9 text-secondary">
+            <%= user.account%>
+        </div>
+    </div>
+</div>
