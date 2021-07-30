@@ -9,23 +9,17 @@ function storeDB(id1, name1, address1, id2, name2, address2) {
     const contratto_2 = Contract.create({id: id2, name: name2 + id1, address: address2});
 }
 
-async function dropTable() {
-    const drop = await Contract.drop();
-}
-
 module.exports = async function (deployer) {
-
-    dropTable();
 
     await deployer.deploy(Evento).then(async function () {
         await deployer.deploy(Biglietti, Evento.address).then(function () {
-            storeDB(1, "evento", Evento.address, 2, "biglietti_evento_", Biglietti.address);
+            storeDB(3, "evento", Evento.address, 4, "biglietti_evento_", Biglietti.address);
         });
     });
 
     const E_ = await Evento.deployed();
     const B_ = await Biglietti.deployed();
 
-    console.log('Evento1 Address ' + E_.address);
-    console.log('Biglietti1 Address ' + B_.address);
+    console.log('Evento2 Address ' + E_.address);
+    console.log('Biglietti2 Address ' + B_.address);
 };

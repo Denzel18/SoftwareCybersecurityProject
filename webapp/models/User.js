@@ -47,6 +47,5 @@ User.prototype.validPassword = function (password) {
 }
 
 // Create all the defined tables in the specified database
-sequelize.sync().then(() => console.log('Table \'' + User.tableName + '\' has been successfully created, if one doesn\'t exist.')).catch(error => console.log('The following error occured: ', error));
-User.sync({force: true});
+User.sync({force: true}).then(() => console.log('Table \'' + User.tableName + '\' has been successfully created.')).catch(error => console.log('The following error occured: ', error));
 module.exports = User;

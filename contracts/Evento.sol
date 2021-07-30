@@ -59,6 +59,19 @@ contract Evento {
         return Evento.luogo;
     }
 
+    function getData() public view returns (string memory){
+        return Evento.data;
+    }
+
+
+    function getOrario() public view returns (string memory){
+        return Evento.orario;
+    }
+
+    function getArtista() public view returns (string memory){
+        return Evento.artista;
+    }
+
     function isAnnulatoEvento() public view returns (bool) {
         if (Evento.stateEvento == StatoEvento.annullato) {
             return true;

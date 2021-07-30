@@ -28,6 +28,5 @@ const Event = sequelize.define('Event',
 );
 
 // Create all the defined tables in the specified database
-sequelize.sync().then(() => console.log('Table \'' + Event.tableName + '\' has been successfully created, if one doesn\'t exist.')).catch(error => console.log('The following error occured: ', error));
-Event.sync({force: true});
+Event.sync({force: true}).then(() => console.log('Table \'' + Event.tableName + '\' has been successfully created.')).catch(error => console.log('The following error occured: ', error));
 module.exports = Event;

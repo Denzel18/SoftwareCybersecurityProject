@@ -12,7 +12,7 @@ const DB_params = {
  * Function that opens the connection to the defined DB.
  * If the DB does not exist than creates it, after creation tries to re-open the connection with the DB.
  */
-function connectToDB() {
+exports.connectToDB = () => {
     // create connection with the DB
     let connection = mysql.createConnection(DB_params);
 
@@ -49,9 +49,3 @@ function connectToDB() {
         }
     });
 }
-
-connectToDB();
-
-module.exports = {
-    connectToDB
-};

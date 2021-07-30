@@ -10,38 +10,42 @@ const database = new Sequelize('cybersecurity', 'user', 'user', {
     dialect: 'mysql',
     host: "localhost",
     port: 3306,
-  })
-
+})
 
 
 const Usermodel = require("../models/User");
-const User = new Usermodel(database,Sequelize);
+const User = new Usermodel(database, Sequelize);
 
 
 router.get('/login', (req, res) => {
-    res.render('login', { title: "Login",  user: req.session.user, errorMsg: req.flash("error"), csrfToken: req.csrfToken() });
+    res.render('login', {
+        title: "Login",
+        user: req.session.user,
+        errorMsg: req.flash("error"),
+        csrfToken: req.csrfToken()
+    });
 });
 
 router.post('/login', (req, res) => {
     logger.info('TEST LOGIN')
     username = req.body.username;
     password = req.body.password;
-    logger.info('USERNAME : '+username+' - '+password)
+    logger.info('USERNAME : ' + username + ' - ' + password)
 
-    database.query('SELECT * FROM Users', {type: database.QueryTypes.SELECT}).then(results=>{
+    database.query('SELECT * FROM user', {type: database.QueryTypes.SELECT}).then(results => {
         console.log(results);
     })
 
-    database.query("SELECT * FROM Users WHERE username = '"+username+"'", {type: database.QueryTypes.SELECT}).then(results=>{
+    database.query("SELECT * FROM user WHERE username = '" + username + "'", {type: database.QueryTypes.SELECT}).then(results => {
         console.log(results);
 
-        if(results.length != 0){
+        if (results.length !== 0) {
             password_memo = results[0].password;
             account_memo = results[0].account;
             logger.info(`Tentativo di login positivo da parte di ${req.body.username}`);
-            logger.info('pwd memorizzata : '+password_memo + ' pwd inserita : '+req.body.password)
+            logger.info('pwd memorizzata : ' + password_memo + ' pwd inserita : ' + req.body.password)
             bcrypt.compare(req.body.password, password_memo, (err, result) => {
-                if(result && !err) {
+                if (result && !err) {
                     req.session.user = {
                         username: req.body.username,
                         account: account_memo
@@ -54,7 +58,7 @@ router.post('/login', (req, res) => {
                     return res.redirect("/login");
                 }
             });
-        } else { 
+        } else {
             logger.info(`Tentativo di login errato da parte di ${req.body.username}`);
             req.flash("error", "Utente o password errati, riprovare!");
             return res.redirect("/login");
@@ -62,7 +66,6 @@ router.post('/login', (req, res) => {
 
     })
 
-    
 
     // User.findOne({where : { username: username }}, (err, user) => {
     //     if(err || !user) {
@@ -90,7 +93,7 @@ router.post('/login', (req, res) => {
 
 router.get("/logout", (req, res) => {
     req.session.destroy((err) => {
-        if(err) console.log(err);
+        if (err) console.log(err);
     })
     return res.redirect("/login");
 });

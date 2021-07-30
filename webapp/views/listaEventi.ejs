@@ -1,0 +1,37 @@
+<html>
+<% extend('layout') %>
+
+<div class="container mt-4">
+    <h1>Lista degli Eventi</h1>
+
+    <table class="table mt-4">
+        <thead>
+        <tr>
+            <th scope="col">ID Contratto</th>
+            <th scope="col">Titolo</th>
+            <th scope="col">Luogo</th>
+            <th scope="col">Data</th>
+            <th scope="col">Orario</th>
+            <th scope="col">Artista</th>
+            <th scope="col">Capienza</th>
+            <th scope="col">Stato</th>
+        </tr>
+        </thead>
+        <tbody>
+        <% for(let item of results) { %>
+            <tr>
+                <td><%= item.id %></td>
+                <td><%= item.titolo %></td>
+                <td><%= item.luogo %></td>
+                <td><%= item.data %></td>
+                <td><%= item.orario %></td>
+                <td><%= item.artista %></td>
+                <td><%= item.capienza %></td>
+                <td><%= item.stato %></td>
+            </tr>
+        <% } %>
+        </tbody>
+    </table>
+</div>
+
+        

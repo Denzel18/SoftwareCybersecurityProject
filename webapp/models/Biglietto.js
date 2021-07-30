@@ -38,6 +38,5 @@ const Ticket = sequelize.define('Ticket',
 );
 
 // Create all the defined tables in the specified database
-sequelize.sync().then(() => console.log('Table \'' + Ticket.tableName + '\' has been successfully created, if one doesn\'t exist.')).catch(error => console.log('The following error occured: ', error));
-Ticket.sync({force: true});
+Ticket.sync({force: true}).then(() => console.log('Table \'' + Ticket.tableName + '\' has been successfully created.')).catch(error => console.log('The following error occured: ', error));
 module.exports = Ticket;

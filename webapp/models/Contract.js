@@ -3,7 +3,7 @@ const {Sequelize, DataTypes} = require('sequelize');
 
 const sequelize = new Sequelize('cybersecurity', 'user', 'user', {
     dialect: 'mysql',
-    host: "localhost",
+    host: 'localhost',
     port: 3306
 })
 
@@ -33,6 +33,6 @@ const Contract = sequelize.define('Contract',
 );
 
 // Create all the defined tables in the specified database
-sequelize.sync().then(() => console.log('Table \'' + Contract.tableName + '\' has been successfully created, if one doesn\'t exist.')).catch(error => console.log('The following error occured: ', error));
-//Contract.sync({ force: true });
+Contract.sync().then(() => console.log('Table \'' + Contract.tableName + '\' has been successfully created.')).catch(error => console.log('The following error occured: ', error));
+// Contract.sync({ force: true }).then(() => console.log('Table \'' + Contract.tableName + '\' has been successfully created.')).catch(error => console.log('The following error occured: ', error));
 module.exports = Contract;

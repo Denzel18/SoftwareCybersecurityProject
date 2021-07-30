@@ -8,9 +8,6 @@ const config = require('./config');
 const session = require('express-session');
 const fs = require('fs');
 const csurf = require('csurf')
-const mysql = require('mysql');
-
-const isLoggedIn = require('./middleware/login');
 
 const eventoRouter = require('./routes/evento');
 //const indexRouter = require('./routes/index');
@@ -19,6 +16,14 @@ const loginRouter = require("./routes/login");
 const usersRouter = require("./routes/users");
 const {Sequelize} = require('sequelize');
 const sequelize = new Sequelize('mysql://user:user@localhost:3306/cybersecurity');
+
+// create the DB
+const connect = import('./connect.js')
+
+//TODO: fare in modo che prima avvenga la creazione del DB e poi si prosegue con il resto
+void async function () {
+    (await connect).connectToDB();
+}();
 
 // var connection = mysql.createConnection({
 //   host : 'localhost',
@@ -80,7 +85,7 @@ app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
 
 
-app.use('/', loginRouter);
+app.use('/login', loginRouter);
 app.use('/user', usersRouter);
 app.use('/evento', eventoRouter);
 
