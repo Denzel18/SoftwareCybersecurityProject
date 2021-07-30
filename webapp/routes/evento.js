@@ -78,7 +78,7 @@ router.get('/', isLoggedIn, (req, res) => {
                 list_out.push(evnt)
             }
 
-            return res.render('listaEventi', {title: 'Eventi', results: list_out, user: req.session.user})
+            return res.render('listaEventi', {title: 'Lista Eventi', results: list_out, user: req.session.user})
         } else {
             return res.redirect("/");
         }
@@ -86,19 +86,53 @@ router.get('/', isLoggedIn, (req, res) => {
     })
 });
 
-router.get("/:id", (req, res) => {
+router.get("/:id", isLoggedIn, (req, res) => {
 
     const id = req.params.id
 
     logger.info('TEST EVENTO ID' + id)
 
-    database.query('SELECT * FROM event WHERE id =' + id, {type: database.QueryTypes.SELECT}).then(results => {
+    database.query('SELECT * FROM contract WHERE lower(name) like \'evento%\' AND id =' + id, {type: database.QueryTypes.SELECT}).then(async result => {
 
-        if (results.length != 0) {
-            console.log(results);
-            return res.render('evento', {title: "Eventi", results: results, user: req.session.user})
+        if (result.length !== 0) {
+            // get an instance of the event
+            const eventoService = await EventoService.getInstance({
+                // user account address
+                account: req.session.user.account,
+                // host URL
+                host: 'http://localhost:22000',
+                // contract account address
+                address: result[0].address
+            });
+
+            // get title of the event
+            const titolo = await eventoService.getTitolo();
+            // get place of the event
+            const luogo = await eventoService.getLuogo();
+            // get capacity of the event
+            const capienza = await eventoService.getCapienza();
+            // get state of the event
+            const stato = await eventoService.getStato();
+            // get date of the event
+            const data = await eventoService.getData();
+            // get time of the event
+            const orario = await eventoService.getOrario();
+            // get artist of the event
+            const artista = await eventoService.getArtista();
+
+            const evnt = {
+                id: result[0].id,
+                titolo: titolo,
+                luogo: luogo,
+                capienza: capienza,
+                stato: stato,
+                data: data,
+                orario: orario,
+                artista: artista
+            }
+            return res.render('evento', {title: 'Dettagli Evento', result: evnt, user: req.session.user})
         } else {
-            return res.redirect("/");
+            return res.redirect('/');
         }
 
     })

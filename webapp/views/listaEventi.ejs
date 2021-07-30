@@ -1,4 +1,3 @@
-<html>
 <% extend('layout') %>
 
 <div class="container mt-4">
@@ -15,6 +14,7 @@
             <th scope="col">Artista</th>
             <th scope="col">Capienza</th>
             <th scope="col">Stato</th>
+            <th scope="col"></th>
         </tr>
         </thead>
         <tbody>
@@ -28,6 +28,7 @@
                 <td><%= item.artista %></td>
                 <td><%= item.capienza %></td>
                 <td><%= item.stato %></td>
+                <td><a class="btn btn-primary" href="/evento/<%= item.id %>">Dettagli evento</a></td>
             </tr>
         <% } %>
         </tbody>

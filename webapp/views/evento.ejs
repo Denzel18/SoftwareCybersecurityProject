@@ -1,0 +1,29 @@
+<% extend('layout') %>
+
+<div class="container mt-4">
+    <h1 class="mb-3">Evento "<%= result.titolo %>"</h1>
+
+    <div class="col">
+        <div class="row">
+            <p><b>ID Evento:</b> <%= result.id %></p>
+        </div>
+        <div class="row">
+            <p><b>Luogo Evento:</b> <%= result.luogo %></p>
+        </div>
+        <div class="row">
+            <p><b>Data Evento:</b> <%= result.data %></p>
+        </div>
+        <div class="row">
+            <p><b>Orario Evento:</b> <%= result.orario %></p>
+        </div>
+        <div class="row">
+            <p><b>Artista Evento:</b> <%= result.artista %></p>
+        </div>
+        <div class="row">
+            <p><b>Capienza Evento:</b> <%= result.capienza %></p>
+        </div>
+        <div class="row">
+            <p><b>Stato Evento:</b> <%= result.stato %></p>
+        </div>
+    </div>
+</div>
