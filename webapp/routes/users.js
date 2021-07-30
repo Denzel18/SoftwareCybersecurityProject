@@ -12,7 +12,7 @@ const con = mysql.createConnection({
 /* GET users listing. */
 router.get('/', isLoggedIn, (req, res, next) => {
     let username = req.session.user.username;
-    let query = "SELECT * FROM Users WHERE username = ?";
+    let query = "SELECT * FROM user WHERE username = ?";
     con.query(query, [username], function (err, result){
         return res.render("user", {title: "Utente", user: result[0]});
     });

@@ -17,7 +17,7 @@ const Usermodel = require("../models/User");
 const User = new Usermodel(database, Sequelize);
 
 
-router.get('/login', (req, res) => {
+router.get('/', (req, res) => {
     res.render('login', {
         title: "Login",
         user: req.session.user,
@@ -26,7 +26,7 @@ router.get('/login', (req, res) => {
     });
 });
 
-router.post('/login', (req, res) => {
+router.post('/', (req, res) => {
     logger.info('TEST LOGIN')
     username = req.body.username;
     password = req.body.password;
