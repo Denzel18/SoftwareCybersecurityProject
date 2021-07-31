@@ -1,0 +1,28 @@
+<% extend('layout') %>
+
+<div class="container mt-4">
+    <h1 class="mb-3">Acquisto biglietto per evento: "<%= result.titolo %>"</h1>
+    </div>
+<div class="col">
+    <div class="row">
+        <p><b>Riepilogo dati evento:</b>
+    </div>
+    <div class="row">
+        <p><b>Luogo Evento:</b> <%= result.luogo %></p>
+    </div>
+    <div class="row">
+        <p><b>Data Evento:</b> <%= result.data %></p>
+    </div>
+    <div class="row">
+        <p><b>Orario Evento:</b> <%= result.orario %></p>
+    </div>
+    <div class="row">
+        <p><b>Artista Evento:</b> <%= result.artista %></p>
+    </div>
+    <div class="row">
+        <p><b>Tipo Biglietto:</b> <%= result.tipologia %></p>
+    </div>
+    <div class="row">
+        <p><b>Posti Rimanenti:</b> <%= result.posti %></p>
+    </div>
+</div>

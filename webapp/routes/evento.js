@@ -167,4 +167,57 @@ router.get("/biglietti/:id", isLoggedIn, async (req, res) => {
     }
 });
 
+router.get("/:id/acquistabiglietto", isLoggedIn, async (req, res) => {
+
+    const id = req.params.id
+
+    logger.info('TEST EVENTO ID' + id)
+
+    database.query('SELECT * FROM contract WHERE lower(name) like \'evento%\' AND id =' + id, {type: database.QueryTypes.SELECT}).then(async result => {
+
+        if (result.length !== 0) {
+            // get an instance of the event
+            const eventoService = await EventoService.getInstance({
+                // user account address
+                account: req.session.user.account,
+                // host URL
+                host: 'http://localhost:22000',
+                // contract account address
+                address: result[0].address
+            });
+
+            let BigliettiService_ = await BigliettiService.getInstance({account: req.session.user.account});
+
+            // get title of the event
+            const titolo = await eventoService.getTitolo();
+            // get place of the event
+            const luogo = await eventoService.getLuogo();
+            // get date of the event
+            const data = await eventoService.getData();
+            // get time of the event
+            const orario = await eventoService.getOrario();
+            // get artist of the event
+            const artista = await eventoService.getArtista();
+            // get tipologia biglietto
+            const tipologia = await BigliettiService_.getTipoBiglietto(id);
+            // get posti rimanenti
+            const posti_rimanenti = await BigliettiService_.getPostiRimanenti(id);
+
+            const evnt_info = {
+                titolo: titolo,
+                luogo: luogo,
+                data: data,
+                orario: orario,
+                artista: artista,
+                tipologia: tipologia,
+                posti: posti_rimanenti
+            }
+            return res.render('acquisto_biglietto', {title: 'Acquisto Biglietto', result: evnt_info, user: req.session.user})
+        } else {
+            return res.redirect('/');
+        }
+
+    })
+});
+
 module.exports = router;
