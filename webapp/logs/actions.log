@@ -1195,3 +1195,9 @@
 2021-07-31T08:39:10.376Z [info]: TEST EVENTO ID1
 2021-07-31T08:40:55.725Z [info]: TEST EVENTO ID1
 2021-07-31T08:42:07.198Z [info]: TEST EVENTO ID1
+2021-08-01T16:11:34.214Z [info]: GET - INSERIMENTO NUOVO UTENTE
+2021-08-01T16:11:41.149Z [info]: TEST LOGIN
+2021-08-01T16:11:41.149Z [info]: USERNAME : denis@prova.com - prova
+2021-08-01T16:11:41.157Z [info]: Tentativo di login positivo da parte di denis@prova.com
+2021-08-01T16:11:41.157Z [info]: pwd memorizzata : $2b$10$9HDnP7O6Qccl1Mj/3c9PFel8bRScQ.NxgsBx6lchuC6WfeL1I9Ra. pwd inserita : prova
+2021-08-01T16:11:41.245Z [info]: Login eseguito dall'utente denis@prova.com
