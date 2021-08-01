@@ -1,0 +1,19 @@
+<% extend('layout') %>
+
+<div class="container mt-4">
+    <h1 class="mb-3">Acquisto biglietto</h1>
+    <div class="col">
+        <form action="/evento/<%= id_evento %>/acquistabiglietto" method="POST">
+            <div class="form-group">
+                <label for="ticket_type">Choose the typology of the ticket:</label>
+                <select id="ticket_type" name="ticket_type">
+                    <option value="platinum">Platinum</option>
+                    <option value="gold">Gold</option>
+                    <option value="standard">Standard</option>
+                </select>
+            </div>
+            <input type="hidden" name="_csrf" value="<%= csrfToken %>">
+            <button type="submit" class="btn btn-primary">Submit</button>
+        </form>
+    </div>
+</div>

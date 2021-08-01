@@ -16,9 +16,9 @@ const database = new Sequelize('cybersecurity', 'user', 'user', {
     port: 3306,
 })
 
-const ContractModel = require('../models/Contract')
-const EventModel = require('../models/Evento');
-const TicketModel = require('../models/Biglietto');
+// const ContractModel = require('../models/Contract')
+// const EventModel = require('../models/Evento');
+// const TicketModel = require('../models/Biglietto');
 //const User = new Usermodel(database,Sequelize);
 
 const Contract = require('web3-eth-contract');
@@ -138,46 +138,17 @@ router.get("/:id", isLoggedIn, (req, res) => {
     })
 });
 
-router.get("/biglietti/:id", isLoggedIn, async (req, res) => {
+router.get("/:id/biglietti", isLoggedIn, async (req, res) => {
 
     const id = req.params.id
 
     logger.info('GET BIGLIETTI DATO ID EVENTO' + id)
 
 
-    let BigliettiService_ = await BigliettiService.getInstance({account: req.session.user.account});
-    let biglietti = await BigliettiService_.getBiglietti();
-
-    // database.query('SELECT * FROM Biglietto WHERE id_evento ='+id, {type: database.QueryTypes.SELECT}).then(results=>{
-
-    //     if(results.length != 0){
-    //         console.log(results);
-    //         return res.render('evento',{ title: "Eventi", results: results, user: req.session.user })
-    //     }else{
-    //         return res.redirect("/");
-    //     }
-
-    // })
-
-    if (biglietti.length != 0) {
-        console.log(biglietti);
-        return res.render('biglietti', {title: "Eventi", results: biglietti, user: req.session.user})
-    } else {
-        return res.redirect("/");
-    }
-});
-
-router.get("/:id/acquistabiglietto", isLoggedIn, async (req, res) => {
-
-    const id = req.params.id
-
-    logger.info('TEST EVENTO ID' + id)
-
-    database.query('SELECT * FROM contract WHERE lower(name) like \'evento%\' AND id =' + id, {type: database.QueryTypes.SELECT}).then(async result => {
-
+    database.query('SELECT * FROM contract WHERE lower(name)=\'biglietti_evento_' + id + '\'', {type: database.QueryTypes.SELECT}).then(async result => {
         if (result.length !== 0) {
-            // get an instance of the event
-            const eventoService = await EventoService.getInstance({
+            // get an instance of the tickets
+            const bigliettiSevice = await BigliettiService.getInstance({
                 // user account address
                 account: req.session.user.account,
                 // host URL
@@ -186,38 +157,72 @@ router.get("/:id/acquistabiglietto", isLoggedIn, async (req, res) => {
                 address: result[0].address
             });
 
-            let BigliettiService_ = await BigliettiService.getInstance({account: req.session.user.account});
+            const biglietti = await bigliettiSevice.getBiglietti();
 
-            // get title of the event
-            const titolo = await eventoService.getTitolo();
-            // get place of the event
-            const luogo = await eventoService.getLuogo();
-            // get date of the event
-            const data = await eventoService.getData();
-            // get time of the event
-            const orario = await eventoService.getOrario();
-            // get artist of the event
-            const artista = await eventoService.getArtista();
-            // get tipologia biglietto
-            const tipologia = await BigliettiService_.getTipoBiglietto(id);
-            // get posti rimanenti
-            const posti_rimanenti = await BigliettiService_.getPostiRimanenti(id);
-
-            const evnt_info = {
-                titolo: titolo,
-                luogo: luogo,
-                data: data,
-                orario: orario,
-                artista: artista,
-                tipologia: tipologia,
-                posti: posti_rimanenti
-            }
-            return res.render('acquisto_biglietto', {title: 'Acquisto Biglietto', result: evnt_info, user: req.session.user})
+            return res.render('listaBiglietti', {
+                title: 'Biglietti Venduti',
+                results: biglietti,
+                user: req.session.user
+            })
         } else {
+            console.log('***CONTRATTO NON TROVATO');
             return res.redirect('/');
         }
+    });
+});
 
+router.get("/:id/acquistabiglietto", isLoggedIn, async (req, res) => {
+
+    return res.render('acquistoBiglietto', {
+        title: 'Acquista Biglietto',
+        id_evento: req.params.id,
+        user: req.session.user,
+        errorMsg: req.flash("error"),
+        csrfToken: req.csrfToken()
     })
+});
+
+
+router.post("/:id/acquistabiglietto", isLoggedIn, async (req, res) => {
+
+
+    let ticketType = req.body.ticket_type;
+    let ticketPrice;
+    const id_evento = req.params.id;
+
+    switch (ticketType) {
+        case 'platinum':
+            ticketType = 0;
+            ticketPrice = '59.99';
+            break;
+        case 'gold':
+            ticketType = 1;
+            ticketPrice = '39.99';
+            break;
+        default:
+            ticketType = 2;
+            ticketPrice = '19.99';
+    }
+
+    database.query('SELECT * FROM contract WHERE lower(name)=\'biglietti_evento_' + id_evento + '\'', {type: database.QueryTypes.SELECT}).then(async result => {
+        if (result.length !== 0) {
+            // get an instance of the tickets
+            const bigliettiSevice = await BigliettiService.getInstance({
+                // user account address
+                account: req.session.user.account,
+                // host URL
+                host: 'http://localhost:22000',
+                // contract account address
+                address: result[0].address
+            });
+
+            // store the sold ticket
+            const ticket_info = await bigliettiSevice.storeItem(new Date().toISOString(), ticketPrice, ticketType);
+        } else {
+            console.log('***CONTRATTO NON TROVATO');
+        }
+        return res.redirect('/');
+    });
 });
 
 module.exports = router;
