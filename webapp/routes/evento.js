@@ -19,9 +19,10 @@ const database = new Sequelize('cybersecurity', 'user', 'user', {
 // const ContractModel = require('../models/Contract')
 // const EventModel = require('../models/Evento');
 // const TicketModel = require('../models/Biglietto');
-//const User = new Usermodel(database,Sequelize);
+// const User = new Usermodel(database,Sequelize);
 
 const Contract = require('web3-eth-contract');
+const fs = require("fs");
 
 Contract.setProvider('http://127.0.0.1:22000');
 
@@ -31,6 +32,7 @@ router.get('/', isLoggedIn, (req, res) => {
     logger.info('TEST EVENTO' + req.body)
 
     database.query('SELECT * FROM contract where lower(name) like \'evento%\'', {type: database.QueryTypes.SELECT}).then(async results => {
+
 
         if (results.length !== 0) {
             let list_out = []
@@ -46,8 +48,9 @@ router.get('/', isLoggedIn, (req, res) => {
                     address: evento.address
                 });
 
+
                 // TODO: solo per prova, togliere (l'inserimento dei dati dell'evento deve avvenire dopo il deploy del contratto)
-                const evento_info = await eventoService.storeItem(1, 'Concerto X', 'Macerata', '20/12/2022', '21:00', 'Artista Y', 1500);
+               // const evento_info = await eventoService.storeItem(1, 'Concerto X', 'Macerata', '20/12/2022', '21:00', 'Artista Y', 1500);
 
 
                 // get title of the event
@@ -90,7 +93,7 @@ router.get('/', isLoggedIn, (req, res) => {
     })
 });
 
-router.get("/:id", isLoggedIn, (req, res) => {
+router.get("/id/:id", isLoggedIn, (req, res) => {
 
     const id = req.params.id
 
@@ -143,7 +146,7 @@ router.get("/:id", isLoggedIn, (req, res) => {
     })
 });
 
-router.get("/:id/biglietti", isLoggedIn, async (req, res) => {
+router.get("/id/:id/biglietti", isLoggedIn, async (req, res) => {
 
     const id = req.params.id
 
@@ -176,7 +179,7 @@ router.get("/:id/biglietti", isLoggedIn, async (req, res) => {
     });
 });
 
-router.get("/:id/acquistabiglietto", isLoggedIn, async (req, res) => {
+router.get("/id/:id/acquistabiglietto", isLoggedIn, async (req, res) => {
 
     return res.render('acquistoBiglietto', {
         title: 'Acquista Biglietto',
@@ -188,7 +191,7 @@ router.get("/:id/acquistabiglietto", isLoggedIn, async (req, res) => {
 });
 
 
-router.post("/:id/acquistabiglietto", isLoggedIn, async (req, res) => {
+router.post("/id/:id/acquistabiglietto", isLoggedIn, async (req, res) => {
 
 
     let ticketType = req.body.ticket_type;
@@ -230,5 +233,76 @@ router.post("/:id/acquistabiglietto", isLoggedIn, async (req, res) => {
         return res.redirect('/');
     });
 });
+
+
+router.get('/newevento', isLoggedIn, (req, res) => {
+    logger.info('Form di creazione evento');
+    res.render('evento_form', {
+        title: "Crea Evento",
+        user: req.session.user,
+        csrfToken: req.csrfToken()
+    });
+});
+
+
+router.post('/newevento', isLoggedIn, async (req, res) => {
+    logger.info('Inizio Salvataggio Evento ...')
+    const titolo = req.body.titolo;
+    const luogo = req.body.luogo;
+    const data = req.body.date;
+    const orario = req.body.orario;
+    const artista = req.body.artista;
+    const capienza = req.body.capienza;
+
+    logger.info(" Test Parametri:"+ titolo + ", " + luogo + ", " + data + ", ecc..." )
+
+    //TODO: controlli sugli attributi dell'evento
+
+    //Idea 1: usare la json interface
+    var fs = require('fs');
+    var obj = JSON.parse(fs.readFileSync('../build/contracts/Evento.json', 'utf8'));
+    const eventoInterface = obj['abi'];
+    var Contract = require('web3-eth-contract');
+    Contract.setProvider('http://127.0.0.1:22000');
+
+    let nuovoEvento = new Contract(eventoInterface);
+
+    //Prende il bytecode del contratto "Evento"
+    await nuovoEvento.deploy({
+        data: obj['bytecode'],
+
+        arguments: null
+    }).send({
+        from: req.session.user.account
+    }).then((instance) => {
+        global.savedAddress = instance.options.address;
+        logger.info("Contract mined at " + savedAddress);
+    });
+
+    const timestamp = new Date().toISOString();
+
+    const eventoService = await EventoService.getInstance({
+        account: req.session.user.account,
+        host: 'http://localhost:22000',
+        address: savedAddress
+    });
+
+    const evento_info = await eventoService.storeItem(1000, titolo, luogo, data, orario, artista, capienza);
+
+    //TODO: correggere createdAt, updated At
+    await database.query({query:"INSERT INTO contract (name, address, createdAt, updatedAt) VALUES ('evento',?,'2021-07-30 10:56:10','2021-07-30 10:56:10')",values: [savedAddress]}, function (err, result) {
+        if (err) throw err;
+        logger.info("1 record inserted, ID:" + result.insertId);
+    });
+
+
+    return res.redirect("/evento");
+
+
+
+});
+
+
+
 
 module.exports = router;
