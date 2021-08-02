@@ -21,7 +21,8 @@ router.get('/', (req, res) => {
     res.render('login', {
         title: "Login",
         user: req.session.user,
-        errorMsg: req.flash("error"),
+        errorMsg: req.flash('error'),
+        successMsg: req.flash('success'),
         csrfToken: req.csrfToken()
     });
 });

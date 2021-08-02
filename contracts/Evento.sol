@@ -72,6 +72,10 @@ contract Evento {
         return Evento.artista;
     }
 
+    function getTimestamp() public view returns (string memory){
+        return Evento.timestamp;
+    }
+
     function isAnnulatoEvento() public view returns (bool) {
         if (Evento.stateEvento == StatoEvento.annullato) {
             return true;

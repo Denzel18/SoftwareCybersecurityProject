@@ -9,8 +9,8 @@ var cookieParser = require('cookie-parser')
 var bodyParser = require('body-parser')
 
 // setup route middlewares
-var csrfProtection = csurf({ cookie: true })
-var parseForm = bodyParser.urlencoded({ extended: false });
+var csrfProtection = csurf({cookie: true})
+var parseForm = bodyParser.urlencoded({extended: false});
 
 const bcrypt = require("bcrypt");
 // const bcrypt = require("bcryptjs")
@@ -33,12 +33,17 @@ const con = mysql.createConnection({
     password: "user",
     database: "cybersecurity"
 });
-/* GET users listing. */
+
 router.get('/', isLoggedIn, (req, res, next) => {
     let username = req.session.user.username;
     let query = "SELECT * FROM user WHERE username = ?";
-    con.query(query, [username], function (err, result){
-        return res.render("user", {title: "Utente", user: result[0]});
+    con.query(query, [username], function (err, result) {
+        return res.render("user", {
+            title: "Utente",
+            errorMsg: req.flash('error'),
+            successMsg: req.flash('success'),
+            user: result[0]
+        });
     });
 });
 
@@ -49,55 +54,54 @@ router.get('/new', csrfProtection, function (req, res) {
         user: null,
         errorMsg: req.flash("error"),
         csrfToken: req.csrfToken()
-        });
+    });
 });
-  
+
 router.post('/new', (req, res) => {
     logger.info('GET - INSERIMENTO NUOVO UTENTE');
-    
+
     nome = req.body.nome;
     cognome = req.body.cognome;
     account = req.body.account;
     email = req.body.email;
     password = req.body.password;
-    
+
     const saltRounds = 10;
     bcrypt.genSalt(saltRounds, function (err, salt) {
-      if (err) {
-        throw err
-      } else {
-        bcrypt.hash(password, salt, function(err, hash) {
-          if (err) {
+        if (err) {
             throw err
-          } else {
-            console.log(hash)
-            password_ = hash; 
-            nominativo = nome + ' '+cognome; 
-            let ts = Date.now();
-            let date_ob = new Date(ts);
-            let date = date_ob.getDate();
-            let month = date_ob.getMonth() + 1;
-            let year = date_ob.getFullYear();
-            data_ = "'"+year + "-" + month + "-" + date + "'"; 
-            query_ = "INSERT into user (name, username, password, account, createdAt, updatedAt) values ('"+ nominativo+"','"+email+"','"+password_+"','"+account+"',"+data_+","+data_+");"; 
+        } else {
+            bcrypt.hash(password, salt, function (err, hash) {
+                if (err) {
+                    throw err
+                } else {
+                    console.log(hash)
+                    password_ = hash;
+                    nominativo = nome + ' ' + cognome;
+                    let ts = Date.now();
+                    let date_ob = new Date(ts);
+                    let date = date_ob.getDate();
+                    let month = date_ob.getMonth() + 1;
+                    let year = date_ob.getFullYear();
+                    data_ = "'" + year + "-" + month + "-" + date + "'";
+                    query_ = "INSERT into user (name, username, password, account, createdAt, updatedAt) values ('" + nominativo + "','" + email + "','" + password_ + "','" + account + "'," + data_ + "," + data_ + ");";
 
-            database.query(query_).then(results => {
-                console.log(results);
-                if(results != 0){
-                    console.log(req.body);
-                    req.flash("error", "Utente Creato");
-                    return res.redirect("/login");
-                }else{
-                    console.log('Errore creazione utente');
-                    return res.redirect("/user/new");
+                    database.query(query_).then(results => {
+                        console.log(results);
+                        if (results !== 0) {
+                            console.log(req.body);
+                            req.flash("success", "Utente Creato");
+                            return res.redirect("/login");
+                        } else {
+                            console.log('Errore creazione utente');
+                            return res.redirect("/user/new");
+                        }
+                    });
                 }
-            });
-          }
-        })
-      }
-    })  
+            })
+        }
+    })
 });
-
 
 
 module.exports = router;

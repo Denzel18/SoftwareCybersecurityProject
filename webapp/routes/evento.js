@@ -64,6 +64,8 @@ router.get('/', isLoggedIn, (req, res) => {
                 const orario = await eventoService.getOrario();
                 // get artist of the event
                 const artista = await eventoService.getArtista();
+                // get timestamp of the event
+                const timestamp = await eventoService.getTimestamp();
 
                 const evnt = {
                     id: evento.id,
@@ -73,13 +75,15 @@ router.get('/', isLoggedIn, (req, res) => {
                     stato: stato,
                     data: data,
                     orario: orario,
-                    artista: artista
+                    artista: artista,
+                    timestamp: timestamp
                 }
                 list_out.push(evnt)
             }
 
             return res.render('listaEventi', {title: 'Lista Eventi', results: list_out, user: req.session.user})
         } else {
+            req.flash('error', 'ERRORE, nessun contratto evento trovato.');
             return res.redirect("/");
         }
 
@@ -132,6 +136,7 @@ router.get("/:id", isLoggedIn, (req, res) => {
             }
             return res.render('evento', {title: 'Dettagli Evento', result: evnt, user: req.session.user})
         } else {
+            req.flash('error', 'ERRORE, il contratto dell\'evento selezionato non è stato trovato.');
             return res.redirect('/');
         }
 
@@ -165,7 +170,7 @@ router.get("/:id/biglietti", isLoggedIn, async (req, res) => {
                 user: req.session.user
             })
         } else {
-            console.log('***CONTRATTO NON TROVATO');
+            req.flash('error', 'ERRORE, contratto biglietti non trovato.');
             return res.redirect('/');
         }
     });
@@ -218,8 +223,9 @@ router.post("/:id/acquistabiglietto", isLoggedIn, async (req, res) => {
 
             // store the sold ticket
             const ticket_info = await bigliettiSevice.storeItem(new Date().toISOString(), ticketPrice, ticketType);
+            req.flash('success', 'Biglietto acquistato correttamente.');
         } else {
-            console.log('***CONTRATTO NON TROVATO');
+            req.flash('error', 'ERRORE, contratto biglietti non trovato.');
         }
         return res.redirect('/');
     });

@@ -1,6 +1,16 @@
 <% extend('layout') %>
+<% for(let msg of errorMsg) { %>
+    <div class="alert alert-danger mt-3 mb-3" role="alert">
+        <%= msg %>
+    </div>
+<% } %>
+<% for(let msg of successMsg) { %>
+    <div class="alert alert-success mt-3 mb-3" role="alert">
+        <%= msg %>
+    </div>
+<% } %>
 <div class="card-header">
-    <h4>Benvenuto, <%= user.name%>!</h4>
+    <h4>Benvenuto, <%= user.name %>!</h4>
 </div>
 <div class="card-body">
     <div class="row">
@@ -8,19 +18,19 @@
             <h6 class="mb-0">Nome</h6>
         </div>
         <div class="col-sm-9 text-secondary">
-            <%= user.name%>
+            <%= user.name %>
         </div>
         <div class="col-sm-3">
             <h6 class="mb-0">Username</h6>
         </div>
         <div class="col-sm-9 text-secondary">
-            <%= user.username%>
+            <%= user.username %>
         </div>
         <div class="col-sm-3">
             <h6 class="mb-0">Account</h6>
         </div>
         <div class="col-sm-9 text-secondary">
-            <%= user.account%>
+            <%= user.account %>
         </div>
     </div>
 </div>
