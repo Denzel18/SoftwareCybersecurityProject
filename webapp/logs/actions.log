@@ -1201,3 +1201,12 @@
 2021-08-01T16:11:41.157Z [info]: Tentativo di login positivo da parte di denis@prova.com
 2021-08-01T16:11:41.157Z [info]: pwd memorizzata : $2b$10$9HDnP7O6Qccl1Mj/3c9PFel8bRScQ.NxgsBx6lchuC6WfeL1I9Ra. pwd inserita : prova
 2021-08-01T16:11:41.245Z [info]: Login eseguito dall'utente denis@prova.com
+2021-08-02T13:28:45.126Z [info]: TEST LOGIN
+2021-08-02T13:28:45.130Z [info]: USERNAME : user - user
+2021-08-02T13:28:45.229Z [info]: Tentativo di login errato da parte di user
+2021-08-02T13:28:51.296Z [info]: TEST LOGIN
+2021-08-02T13:28:51.297Z [info]: USERNAME : user - user
+2021-08-02T13:28:51.309Z [info]: Tentativo di login positivo da parte di user
+2021-08-02T13:28:51.310Z [info]: pwd memorizzata : $2b$10$IinIjD5sqqXoa0Iw9Wq4ruBo7MS1Iuu5sQVmU9chkPKafZ0Xu9Ne. pwd inserita : user
+2021-08-02T13:28:51.397Z [info]: Login eseguito dall'utente user
+2021-08-02T13:28:53.842Z [info]: TEST EVENTO[object Object]

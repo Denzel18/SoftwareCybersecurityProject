@@ -39,7 +39,9 @@ const User = sequelize.define('User',
         }
     },
     {
-        tableName: 'user'
+        tableName: 'user',
+        // don't add the timestamp attributes (updatedAt, createdAt)
+        timestamps: false
     },
 );
 User.prototype.validPassword = function (password) {

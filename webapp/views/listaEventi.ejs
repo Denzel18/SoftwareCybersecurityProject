@@ -33,8 +33,10 @@
                 <td><%= item.stato %></td>
                 <td><%= item.timestamp %></td>
                 <td><a class="btn btn-primary" href="/evento/id/<%= item.id %>">Dettagli evento</a></td>
-                <td><a class="btn btn-primary" href="/evento/id/<%= item.id %>/biglietti">Lista biglietti venduti</a></td>
-                <td><a class="btn btn-primary" href="/evento/id/<%= item.id %>/acquistabiglietto">Acquista biglietto</a></td>
+                <td><a class="btn btn-primary" href="/evento/id/<%= item.id %>/biglietti">Lista biglietti venduti</a>
+                </td>
+                <td><a class="btn btn-primary" href="/evento/id/<%= item.id %>/acquistabiglietto">Acquista biglietto</a>
+                </td>
             </tr>
         <% } %>
         </tbody>

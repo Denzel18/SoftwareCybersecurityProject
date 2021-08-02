@@ -28,7 +28,9 @@ const Contract = sequelize.define('Contract',
         },
     },
     {
-        tableName: 'contract'
+        tableName: 'contract',
+        // don't add the timestamp attributes (updatedAt, createdAt)
+        timestamps: false
     },
 );
 

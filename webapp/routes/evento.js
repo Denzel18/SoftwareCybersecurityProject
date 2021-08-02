@@ -2,6 +2,8 @@ const express = require('express');
 const router = express.Router();
 const logger = require('../logger');
 const isLoggedIn = require('../middleware/login');
+const createTaxSeal = require('../utils/TaxSealCreation');
+const paymentVerification = require('../utils/paymentVerification')
 
 const BigliettiService = require('../services/bigliettiService');
 const EventoService = require('../services/EventoService');
@@ -22,7 +24,6 @@ const database = new Sequelize('cybersecurity', 'user', 'user', {
 // const User = new Usermodel(database,Sequelize);
 
 const Contract = require('web3-eth-contract');
-const fs = require("fs");
 
 Contract.setProvider('http://127.0.0.1:22000');
 
@@ -47,11 +48,6 @@ router.get('/', isLoggedIn, (req, res) => {
                     // contract account address
                     address: evento.address
                 });
-
-
-                // TODO: solo per prova, togliere (l'inserimento dei dati dell'evento deve avvenire dopo il deploy del contratto)
-               // const evento_info = await eventoService.storeItem(1, 'Concerto X', 'Macerata', '20/12/2022', '21:00', 'Artista Y', 1500);
-
 
                 // get title of the event
                 const titolo = await eventoService.getTitolo();
@@ -193,45 +189,54 @@ router.get("/id/:id/acquistabiglietto", isLoggedIn, async (req, res) => {
 
 router.post("/id/:id/acquistabiglietto", isLoggedIn, async (req, res) => {
 
+    const payment = paymentVerification();
+    console.log('ESITO PAGAMENTO: ' + payment);
 
-    let ticketType = req.body.ticket_type;
-    let ticketPrice;
-    const id_evento = req.params.id;
+    if (payment) {
+        let ticketType = req.body.ticket_type;
+        let ticketPrice;
+        const id_evento = req.params.id;
 
-    switch (ticketType) {
-        case 'platinum':
-            ticketType = 0;
-            ticketPrice = '59.99';
-            break;
-        case 'gold':
-            ticketType = 1;
-            ticketPrice = '39.99';
-            break;
-        default:
-            ticketType = 2;
-            ticketPrice = '19.99';
-    }
-
-    database.query('SELECT * FROM contract WHERE lower(name)=\'biglietti_evento_' + id_evento + '\'', {type: database.QueryTypes.SELECT}).then(async result => {
-        if (result.length !== 0) {
-            // get an instance of the tickets
-            const bigliettiSevice = await BigliettiService.getInstance({
-                // user account address
-                account: req.session.user.account,
-                // host URL
-                host: 'http://localhost:22000',
-                // contract account address
-                address: result[0].address
-            });
-
-            // store the sold ticket
-            const ticket_info = await bigliettiSevice.storeItem(new Date().toISOString(), ticketPrice, ticketType);
-            req.flash('success', 'Biglietto acquistato correttamente.');
-        } else {
-            req.flash('error', 'ERRORE, contratto biglietti non trovato.');
+        switch (ticketType) {
+            case 'platinum':
+                ticketType = 0;
+                ticketPrice = '59.99';
+                break;
+            case 'gold':
+                ticketType = 1;
+                ticketPrice = '39.99';
+                break;
+            default:
+                ticketType = 2;
+                ticketPrice = '19.99';
         }
+
+        const sigillo = createTaxSeal();
+
+        database.query('SELECT * FROM contract WHERE lower(name)=\'biglietti_evento_' + id_evento + '\'', {type: database.QueryTypes.SELECT}).then(async result => {
+            if (result.length !== 0) {
+                // get an instance of the tickets
+                const bigliettiSevice = await BigliettiService.getInstance({
+                    // user account address
+                    account: req.session.user.account,
+                    // host URL
+                    host: 'http://localhost:22000',
+                    // contract account address
+                    address: result[0].address
+                });
+
+                // store the sold ticket
+                const ticket_info = await bigliettiSevice.storeItem(new Date().toISOString(), sigillo, ticketPrice, ticketType);
+                req.flash('success', 'Biglietto acquistato correttamente.');
+            } else {
+                req.flash('error', 'ERRORE, contratto biglietti non trovato.');
+            }
+            return res.redirect('/');
+        });
+    } else {
+        req.flash('error', 'ERRORE, pagamento fallito.');
         return res.redirect('/');
-    });
+    }
 });
 
 
@@ -254,7 +259,7 @@ router.post('/newevento', isLoggedIn, async (req, res) => {
     const artista = req.body.artista;
     const capienza = req.body.capienza;
 
-    logger.info(" Test Parametri:"+ titolo + ", " + luogo + ", " + data + ", ecc..." )
+    logger.info(" Test Parametri:" + titolo + ", " + luogo + ", " + data + ", ecc...")
 
     //TODO: controlli sugli attributi dell'evento
 
@@ -289,8 +294,10 @@ router.post('/newevento', isLoggedIn, async (req, res) => {
 
     const evento_info = await eventoService.storeItem(1000, titolo, luogo, data, orario, artista, capienza);
 
-    //TODO: correggere createdAt, updated At
-    await database.query({query:"INSERT INTO contract (name, address, createdAt, updatedAt) VALUES ('evento',?,'2021-07-30 10:56:10','2021-07-30 10:56:10')",values: [savedAddress]}, function (err, result) {
+    await database.query({
+        query: "INSERT INTO contract (name, address) VALUES ('evento',?)",
+        values: [savedAddress]
+    }, function (err, result) {
         if (err) throw err;
         logger.info("1 record inserted, ID:" + result.insertId);
     });
@@ -299,10 +306,7 @@ router.post('/newevento', isLoggedIn, async (req, res) => {
     return res.redirect("/evento");
 
 
-
 });
-
-
 
 
 module.exports = router;

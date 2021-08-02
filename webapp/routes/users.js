@@ -63,7 +63,7 @@ router.post('/new', (req, res) => {
     nome = req.body.nome;
     cognome = req.body.cognome;
     account = req.body.account;
-    email = req.body.email;
+    username = req.body.username;
     password = req.body.password;
 
     const saltRounds = 10;
@@ -78,13 +78,13 @@ router.post('/new', (req, res) => {
                     console.log(hash)
                     password_ = hash;
                     nominativo = nome + ' ' + cognome;
-                    let ts = Date.now();
-                    let date_ob = new Date(ts);
-                    let date = date_ob.getDate();
-                    let month = date_ob.getMonth() + 1;
-                    let year = date_ob.getFullYear();
-                    data_ = "'" + year + "-" + month + "-" + date + "'";
-                    query_ = "INSERT into user (name, username, password, account, createdAt, updatedAt) values ('" + nominativo + "','" + email + "','" + password_ + "','" + account + "'," + data_ + "," + data_ + ");";
+                    // let ts = Date.now();
+                    // let date_ob = new Date(ts);
+                    // let date = date_ob.getDate();
+                    // let month = date_ob.getMonth() + 1;
+                    // let year = date_ob.getFullYear();
+                    // data_ = "'" + year + "-" + month + "-" + date + "'";
+                    query_ = "INSERT into user (name, username, password, account) values ('" + nominativo + "','" + username + "','" + password_ + "','" + account + "');";
 
                     database.query(query_).then(results => {
                         console.log(results);

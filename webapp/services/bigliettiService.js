@@ -19,8 +19,8 @@ class bigliettiService extends ContractService {
         return new bigliettiService(options.address, '0xed9d02e382b34818e88B88a309c7fe71E65f419d', web3); // node connectToEthereum.js [indirizzo]
     }
 
-    async storeItem(timestamp, prezzo, tipoBiglietto) {
-        return this.send(this.contract.methods.storeItem(timestamp, prezzo, tipoBiglietto));
+    async storeItem(timestamp, sigillo, prezzo, tipoBiglietto) {
+        return this.send(this.contract.methods.storeItem(timestamp, sigillo, prezzo, tipoBiglietto));
     }
 
     async setValidoBiglietto (id){

@@ -17,8 +17,8 @@
         <tbody>
         <% for(let item of results) { %>
             <tr>
-                <th scope="row"><%= item.id %></th>
-                <th scope="row">
+                <td><%= item.id %></td>
+                <td>
                     <% if(item.typeb === '0'){ %>
                         Platinum
                     <% } else if (item.typeb === '1'){ %>
@@ -26,11 +26,19 @@
                     <% } else { %>
                         Standard
                     <% } %>
-                </th>
-                <th scope="row"><%= item.prezzo %></th>
-                <th scope="row"><%= item.cod_sigillo %></th>
-                <th scope="row"><%= item.state %></th>
-                <th scope="row"><%= item.timestamp %></th>
+                </td>
+                <td><%= item.prezzo %></td>
+                <td><%= item.cod_sigillo %></td>
+                <td>
+                    <% if(item.state === '0'){ %>
+                        Valido
+                    <% } else if (item.state === '1'){ %>
+                        Annullato
+                    <% } else { %>
+                        Invalidato
+                    <% } %>
+                </td>
+                <td><%= item.timestamp %></td>
             </tr>
         <% } %>
         </tbody>

@@ -11,9 +11,9 @@ contract Biglietti {
     address eventoAddress;
 
 
-    /*creato = senza sigillo, valido = con sigillo, annullato = evento annullato, invalidato = biglietto utilizzato*/
+    /* valido = biglietto con sigillo, annullato = evento annullato, invalidato = biglietto utilizzato */
 
-    enum StatoBiglietto {creato, valido, annullato, invalidato}
+    enum StatoBiglietto {valido, annullato, invalidato}
     enum TipologiaBiglietto {tipologia1, tipologia2, tipologia3}
 
     event Validato (string cod_sigillo, string evento, string prezzo);
@@ -43,14 +43,14 @@ contract Biglietti {
 
     uint256 length;
 
-    function storeItem(string memory timestamp, string memory prezzo, TipologiaBiglietto tipoBiglietto) public restricted {
+    function storeItem(string memory timestamp, string memory cod_sigillo, string memory prezzo, TipologiaBiglietto tipoBiglietto) public restricted {
         if (getPostiRimanenti() > 0) {
             lista_biglietti.push(Biglietto({
             id : length,
-            state : StatoBiglietto.creato,
+            state : StatoBiglietto.valido,
             timestamp : timestamp,
             prezzo : prezzo,
-            cod_sigillo : "0",
+            cod_sigillo : cod_sigillo,
             typeb : tipoBiglietto
             }));
             length++;
@@ -96,33 +96,17 @@ contract Biglietti {
         return lista_biglietti[posx].id;
     }
 
-    function setSigillo(uint id, string memory sigillo, string memory codiceTransazione) public restricted {
-        if (statusPagamento(codiceTransazione) == true) {
-            lista_biglietti[id].cod_sigillo = sigillo;
-            setValidoBiglietto(id);
-        }
-    }
-
     function getSigillo(uint id) public view returns (string memory) {
         return lista_biglietti[id].cod_sigillo;
     }
 
     function getTipoBiglietto(uint id) public view returns (string memory) {
         if (lista_biglietti[id].typeb == TipologiaBiglietto.tipologia1) {
-            return "Tipologia 1";
+            return 'Platinum';
         } else if (lista_biglietti[id].typeb == TipologiaBiglietto.tipologia2) {
-            return "Tipologia 2";
+            return 'Gold';
         } else {
-            return "Tipologia 3";
-        }
-    }
-
-    function statusPagamento(string memory codiceTransazione) public restricted view returns (bool){
-        string memory OK = "OK";
-        if (keccak256(abi.encodePacked(codiceTransazione)) == keccak256(abi.encodePacked(OK))) {
-            return true;
-        } else {
-            return false;
+            return 'Standard';
         }
     }
 
