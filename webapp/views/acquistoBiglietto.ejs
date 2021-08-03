@@ -3,7 +3,7 @@
 <div class="container mt-4">
     <h1 class="mb-3">Acquisto biglietto</h1>
     <div class="col">
-        <form action="/evento/<%= id_evento %>/acquistabiglietto" method="POST">
+        <form action="/evento/id/<%= id_evento %>/acquistabiglietto" method="POST">
             <div class="form-group">
                 <label for="ticket_type">Choose the typology of the ticket:</label>
                 <select id="ticket_type" name="ticket_type">

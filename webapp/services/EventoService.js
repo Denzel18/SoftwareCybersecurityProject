@@ -14,6 +14,10 @@ class EventoService extends ContractService {
         return new EventoService(contractAddress, accountAddress, web3);
     }
 
+    async getId() {
+        return this.call(this.contract.methods.getId());
+    }
+
     async getEvento() {
         return this.call(this.contract.methods.getEvento());
     }

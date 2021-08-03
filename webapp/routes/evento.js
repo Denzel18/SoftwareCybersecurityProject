@@ -32,7 +32,7 @@ router.get('/', isLoggedIn, (req, res) => {
 
     logger.info('TEST EVENTO' + req.body)
 
-    database.query('SELECT * FROM contract where lower(name) like \'evento%\'', {type: database.QueryTypes.SELECT}).then(async results => {
+    database.query('SELECT * FROM contract where lower(name)=\'evento\'', {type: database.QueryTypes.SELECT}).then(async results => {
 
 
         if (results.length !== 0) {
@@ -49,6 +49,8 @@ router.get('/', isLoggedIn, (req, res) => {
                     address: evento.address
                 });
 
+                // get id of the event
+                const id = await eventoService.getId();
                 // get title of the event
                 const titolo = await eventoService.getTitolo();
                 // get place of the event
@@ -67,7 +69,7 @@ router.get('/', isLoggedIn, (req, res) => {
                 const timestamp = await eventoService.getTimestamp();
 
                 const evnt = {
-                    id: evento.id,
+                    id: id,
                     titolo: titolo,
                     luogo: luogo,
                     capienza: capienza,
@@ -95,7 +97,7 @@ router.get("/id/:id", isLoggedIn, (req, res) => {
 
     logger.info('TEST EVENTO ID' + id)
 
-    database.query('SELECT * FROM contract WHERE lower(name) like \'evento%\' AND id =' + id, {type: database.QueryTypes.SELECT}).then(async result => {
+    database.query('SELECT * FROM contract WHERE lower(name)=\'evento\' AND id_evento =' + id, {type: database.QueryTypes.SELECT}).then(async result => {
 
         if (result.length !== 0) {
             // get an instance of the event
@@ -108,6 +110,8 @@ router.get("/id/:id", isLoggedIn, (req, res) => {
                 address: result[0].address
             });
 
+            // get id of the event
+            const id = await eventoService.getId();
             // get title of the event
             const titolo = await eventoService.getTitolo();
             // get place of the event
@@ -124,7 +128,7 @@ router.get("/id/:id", isLoggedIn, (req, res) => {
             const artista = await eventoService.getArtista();
 
             const evnt = {
-                id: result[0].id,
+                id: id,
                 titolo: titolo,
                 luogo: luogo,
                 capienza: capienza,
@@ -149,7 +153,7 @@ router.get("/id/:id/biglietti", isLoggedIn, async (req, res) => {
     logger.info('GET BIGLIETTI DATO ID EVENTO' + id)
 
 
-    database.query('SELECT * FROM contract WHERE lower(name)=\'biglietti_evento_' + id + '\'', {type: database.QueryTypes.SELECT}).then(async result => {
+    database.query('SELECT * FROM contract WHERE lower(name) like \'biglietti_evento_%\' AND id_evento=' + id, {type: database.QueryTypes.SELECT}).then(async result => {
         if (result.length !== 0) {
             // get an instance of the tickets
             const bigliettiSevice = await BigliettiService.getInstance({
@@ -213,7 +217,7 @@ router.post("/id/:id/acquistabiglietto", isLoggedIn, async (req, res) => {
 
         const sigillo = createTaxSeal();
 
-        database.query('SELECT * FROM contract WHERE lower(name)=\'biglietti_evento_' + id_evento + '\'', {type: database.QueryTypes.SELECT}).then(async result => {
+        database.query('SELECT * FROM contract WHERE lower(name) like \'biglietti_evento_%\' AND id_evento=' + id_evento, {type: database.QueryTypes.SELECT}).then(async result => {
             if (result.length !== 0) {
                 // get an instance of the tickets
                 const bigliettiSevice = await BigliettiService.getInstance({
@@ -242,16 +246,24 @@ router.post("/id/:id/acquistabiglietto", isLoggedIn, async (req, res) => {
 
 router.get('/newevento', isLoggedIn, (req, res) => {
     logger.info('Form di creazione evento');
-    res.render('evento_form', {
-        title: "Crea Evento",
-        user: req.session.user,
-        csrfToken: req.csrfToken()
+
+    let nextEventId;
+    database.query('SELECT * FROM contract where lower(name)=\'evento\'', {type: database.QueryTypes.SELECT}).then(async results => {
+
+        nextEventId = results.length;
+        res.render('evento_form', {
+            title: 'Crea Evento',
+            user: req.session.user,
+            csrfToken: req.csrfToken(),
+            id: nextEventId
+        });
     });
 });
 
 
 router.post('/newevento', isLoggedIn, async (req, res) => {
     logger.info('Inizio Salvataggio Evento ...')
+    const id = req.body.id;
     const titolo = req.body.titolo;
     const luogo = req.body.luogo;
     const data = req.body.date;
@@ -264,10 +276,10 @@ router.post('/newevento', isLoggedIn, async (req, res) => {
     //TODO: controlli sugli attributi dell'evento
 
     //Idea 1: usare la json interface
-    var fs = require('fs');
-    var obj = JSON.parse(fs.readFileSync('../build/contracts/Evento.json', 'utf8'));
+    const fs = require('fs');
+    const obj = JSON.parse(fs.readFileSync('../build/contracts/Evento.json', 'utf8'));
     const eventoInterface = obj['abi'];
-    var Contract = require('web3-eth-contract');
+    const Contract = require('web3-eth-contract');
     Contract.setProvider('http://127.0.0.1:22000');
 
     let nuovoEvento = new Contract(eventoInterface);
@@ -284,28 +296,23 @@ router.post('/newevento', isLoggedIn, async (req, res) => {
         logger.info("Contract mined at " + savedAddress);
     });
 
-    const timestamp = new Date().toISOString();
-
     const eventoService = await EventoService.getInstance({
         account: req.session.user.account,
         host: 'http://localhost:22000',
         address: savedAddress
     });
 
-    const evento_info = await eventoService.storeItem(1000, titolo, luogo, data, orario, artista, capienza);
+    const evento_info = await eventoService.storeItem(id, titolo, luogo, data, orario, artista, capienza);
 
     await database.query({
-        query: "INSERT INTO contract (name, address) VALUES ('evento',?)",
-        values: [savedAddress]
+        query: "INSERT INTO contract (name, address, id_evento) VALUES ('evento',?, ?)",
+        values: [savedAddress, id]
     }, function (err, result) {
         if (err) throw err;
         logger.info("1 record inserted, ID:" + result.insertId);
     });
 
-
     return res.redirect("/evento");
-
-
 });
 
 
