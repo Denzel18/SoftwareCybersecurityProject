@@ -1,38 +1,19 @@
 use cybersecurity;
 
--- password "prova2"
-INSERT into user (id, name, username, password, account)
-values ('1','denis bianchi','denis@bernosvchiiiii.com','$2b$10$GaSy6CRRiQsGOAEFj0eCqOJd4geHzA/q45rn5JECBPvYQpZhNUAHK','0xed9d02e382b34818e88b88a309c7fe71e65f419d');
+-- Username: admin
+-- Password: admin
+INSERT into user (id, name, username, password, account, type)
+values ('1', 'Luca Rossi', 'admin', '$2b$10$STop8hMjsywnmwy.XWAKkunhoGU7MPiiaraSMKjD5KVsqKv1OKj6G',
+        '0xed9d02e382b34818e88b88a309c7fe71e65f419d', 'admin');
 
-INSERT into user (id, name, username, password, account)
-values ('2','denis verdi','denis@prova.com','$2a$10$hlrOeRncW/ut8w7dUqhmHuYSC1oHLr1PVtKvXrI7fUmapZJAKANKq','0xed9d02e382b34818e88b88a309c7fe71e65f419d');
+-- Username: invalidator
+-- Password: invalidator
+INSERT into user (id, name, username, password, account, type)
+values ('2', 'Giovanni Rossi', 'invalidator', '$2b$10$ENaa26rmvVJIyH.O4hkzQ.XlmyKv5M4UpjGNsor0hOrwU9z3mDUOe',
+        '0xed9d02e382b34818e88b88a309c7fe71e65f419d', 'invalidator');
 
 -- Username: user
 -- Password: user
-INSERT into user (id, name, username, password, account)
-values ('4','Mario Rossi','user','$2b$10$IinIjD5sqqXoa0Iw9Wq4ruBo7MS1Iuu5sQVmU9chkPKafZ0Xu9Ne.','0xed9d02e382b34818e88b88a309c7fe71e65f419d');
-
--- password "prova2"
-INSERT into user (id, name, username, password, account)
-values ('5','denis rossi','denis@bernosssvchi.com','$2b$10$GaSy6CRRiQsGOAEFj0eCqOJd4geHzA/q45rn5JECBPvYQpZhNUAHK','0xed9d02e382b34818e88b88a309c7fe71e65f419d');
-
-/*
-INSERT into event (id, titolo, createdAt, updatedAt)
-values ('2','titolo1','2010-10-10','2020-10-10');
-INSERT into event (id, titolo, createdAt, updatedAt)
-values ('3','titolo2','2010-10-10','2020-10-10');
-
-INSERT into ticket (id, id_evento, titolo, tipoBiglietto, createdAt, updatedAt)
-values ('1','2','concerto ligabue', 1,'2010-10-10','2020-10-10');
-INSERT into ticket (id, id_evento, titolo, tipoBiglietto, createdAt, updatedAt)
-values ('2','2','concerto ligabue',1, '2010-10-10','2020-10-10');
-INSERT into ticket (id, id_evento, titolo, tipoBiglietto, createdAt, updatedAt)
-values ('3','2','concerto ligabue', 1,'2010-10-10','2020-10-10');
-INSERT into ticket (id, id_evento, titolo, tipoBiglietto, createdAt, updatedAt)
-values ('4','3','concerto vasco', 1,'2010-10-10','2020-10-10');
-INSERT into ticket (id, id_evento, titolo, tipoBiglietto, createdAt, updatedAt)
-values ('5','3','concerto vasco', 1,'2010-10-10','2020-10-10');
-
-INSERT into contract (id, name, address, createdAt, updatedAt)
-values (1,'Biglietti','0x4D3bfd7821E237fFE84209d8E638f9f309865b87','2010-10-10','2021-01-01');
-*/
+INSERT into user (id, name, username, password, account, type)
+values ('3', 'Mario Rossi', 'user', '$2b$10$CsC/5Mcf8XTXiZkNndc5PecVJazyHRezC89DiVYAVPjbdaI8sm1fq',
+        '0xed9d02e382b34818e88b88a309c7fe71e65f419d', 'user');

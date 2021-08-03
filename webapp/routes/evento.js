@@ -2,6 +2,7 @@ const express = require('express');
 const router = express.Router();
 const logger = require('../logger');
 const isLoggedIn = require('../middleware/login');
+const {isAdmin, isInvalidator, isUser, isAdminOrInvalidator} = require('../middleware/accounts');
 const createTaxSeal = require('../utils/TaxSealCreation');
 const paymentVerification = require('../utils/paymentVerification')
 
@@ -146,7 +147,7 @@ router.get("/id/:id", isLoggedIn, (req, res) => {
     })
 });
 
-router.get("/id/:id/biglietti", isLoggedIn, async (req, res) => {
+router.get("/id/:id/biglietti", isLoggedIn, isAdminOrInvalidator, async (req, res) => {
 
     const id = req.params.id
 
@@ -170,7 +171,8 @@ router.get("/id/:id/biglietti", isLoggedIn, async (req, res) => {
             return res.render('listaBiglietti', {
                 title: 'Biglietti Venduti',
                 results: biglietti,
-                user: req.session.user
+                user: req.session.user,
+                id_evento: id
             })
         } else {
             req.flash('error', 'ERRORE, contratto biglietti non trovato.');
@@ -244,7 +246,7 @@ router.post("/id/:id/acquistabiglietto", isLoggedIn, async (req, res) => {
 });
 
 
-router.get('/newevento', isLoggedIn, (req, res) => {
+router.get('/newevento', isLoggedIn, isAdmin, (req, res) => {
     logger.info('Form di creazione evento');
 
     let nextEventId;
@@ -261,7 +263,7 @@ router.get('/newevento', isLoggedIn, (req, res) => {
 });
 
 
-router.post('/newevento', isLoggedIn, async (req, res) => {
+router.post('/newevento', isLoggedIn, isAdmin, async (req, res) => {
     logger.info('Inizio Salvataggio Evento ...')
     const id = req.body.id;
     const titolo = req.body.titolo;
@@ -313,6 +315,42 @@ router.post('/newevento', isLoggedIn, async (req, res) => {
     });
 
     return res.redirect("/evento");
+});
+
+router.get("/id/:id/invalidaBiglietto/id/:id_biglietto", isLoggedIn, isInvalidator, async (req, res) => {
+
+    const id_evento = req.params.id;
+    const id_biglietto = req.params.id_biglietto;
+
+    await database.query({
+        query: 'SELECT * FROM contract WHERE lower(name) like ? AND id_evento = ?',
+        values: ['biglietti_evento_%', id_evento]
+    }, function (err) {
+        if (err) throw err;
+    }).then(async result => {
+        result = Object.values(JSON.parse(JSON.stringify(result)));
+
+        if (result.length !== 0) {
+            // get an instance of the tickets
+            const bigliettiSevice = await BigliettiService.getInstance({
+                // user account address
+                account: req.session.user.account,
+                // host URL
+                host: 'http://localhost:22000',
+                // contract account address
+                address: result[0][0].address
+            });
+
+            // invalidate the ticket
+            const ticket_info = await bigliettiSevice.setInvalidatoBiglietto(id_biglietto);
+
+            req.flash('success', 'Biglietto invalidato correttamente.');
+        } else {
+            req.flash('error', 'ERRORE, contratto biglietti non trovato.');
+        }
+
+        return res.redirect('/');
+    });
 });
 
 
