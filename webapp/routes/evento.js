@@ -280,8 +280,8 @@ router.post('/newevento', isLoggedIn, isAdmin, async (req, res) => {
 
     //Fase 1: creazione di un nuovo contratto Evento e deploy
     //Usare la json interface (attraverso l'abi)
-    var fs = require('fs');
-    var obj = JSON.parse(fs.readFileSync('../build/contracts/Evento.json', 'utf8'));
+    const fs = require('fs');
+    const obj = JSON.parse(fs.readFileSync('../build/contracts/Evento.json', 'utf8'));
     const eventoInterface = obj['abi'];
     const Contract = require('web3-eth-contract');
     Contract.setProvider('http://127.0.0.1:22000');
@@ -314,25 +314,26 @@ router.post('/newevento', isLoggedIn, isAdmin, async (req, res) => {
     //Fase 3: inserimento dell'address del contratto Evento nel DB
 
     await database.query({
-        query: "INSERT INTO contract (name, address) VALUES ('evento',?)",
-        values: [e_savedAddress]
+        query: "INSERT INTO contract (name, address, id_evento) VALUES ('evento',?, ?)",
+        values: [e_savedAddress, id]
     }, function (err, result) {
         if (err) throw err;
-        global.eventId = result.insertId;
+    }).then(result => {
+        global.eventId = result[0];
         logger.info("1 record inserted, ID:" + eventId);
     });
 
     //Fase 4: creazione e deploy del contratto Biglietti associato all'evento appena creato
 
-    var biglietti_obj = JSON.parse(fs.readFileSync('../build/contracts/Biglietti.json', 'utf8'));
+    const biglietti_obj = JSON.parse(fs.readFileSync('../build/contracts/Biglietti.json', 'utf8'));
     const bigliettiInterface = biglietti_obj['abi'];
-    let newBiglietti = new Contract(bigliettiInterface);
+    const newBiglietti = new Contract(bigliettiInterface);
 
     await newBiglietti.deploy({
         data: biglietti_obj['bytecode'],
 
         //address del contratto Evento creato in precedenza, va in input al costruttore di Biglietti
-        arguments: e_savedAddress
+        arguments: [e_savedAddress]
     }).send({
         from: req.session.user.account
     }).then((instance) => {
@@ -342,18 +343,18 @@ router.post('/newevento', isLoggedIn, isAdmin, async (req, res) => {
 
     //Fase 5: inserimento dell'address del nuovo contratto Biglietti sul DB
 
-    let nome_contratto = 'biglietti_evento_'+ eventId;
-    logger.info('Inserendo: '+nome_contratto);
+    let nome_contratto = 'biglietti_evento_' + global.eventId;
+    logger.info('Inserendo: ' + nome_contratto);
     await database.query({
-        query: "INSERT INTO contract (name, address) VALUES (?,?)",
-        values: [nome_contratto, b_savedAddress]
+        query: "INSERT INTO contract (name, address, id_evento) VALUES (?,?, ?)",
+        values: [nome_contratto, b_savedAddress, id]
     }, function (err, result) {
         if (err) throw err;
         logger.info("1 record inserted, ID:" + result.insertId);
     });
 
 
-    return res.redirect("/evento");
+    return res.redirect('/');
 });
 
 router.get("/id/:id/invalidaBiglietto/id/:id_biglietto", isLoggedIn, isInvalidator, async (req, res) => {
