@@ -26,6 +26,10 @@ const Contract = sequelize.define('Contract',
             type: DataTypes.STRING(100),
             required: true
         },
+        id_evento: {
+            allowNull: false,
+            type: DataTypes.INTEGER
+        },
     },
     {
         tableName: 'contract',

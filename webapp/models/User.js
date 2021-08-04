@@ -36,6 +36,11 @@ const User = sequelize.define('User',
             allowNull: false,
             type: DataTypes.STRING(100),
             required: true
+        },
+        type: {
+            allowNull: false,
+            type: DataTypes.STRING(100),
+            required: true
         }
     },
     {

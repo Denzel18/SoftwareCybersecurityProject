@@ -12,6 +12,7 @@
             <th scope="col">Codice Sigillo</th>
             <th scope="col">Stato</th>
             <th scope="col">Timestamp</th>
+            <th scope="col"></th>
         </tr>
         </thead>
         <tbody>
@@ -39,6 +40,12 @@
                     <% } %>
                 </td>
                 <td><%= item.timestamp %></td>
+                <% if (item.state === '0') { %>
+                    <td><a class="btn btn-primary"
+                           href="/evento/id/<%= id_evento %>/invalidaBiglietto/id/<%= item.id %>">Invalida
+                            Biglietto</a>
+                    </td>
+                <% } %>
             </tr>
         <% } %>
         </tbody>

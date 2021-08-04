@@ -33,23 +33,21 @@ router.post('/', (req, res) => {
     password = req.body.password;
     logger.info('USERNAME : ' + username + ' - ' + password)
 
-    database.query('SELECT * FROM user', {type: database.QueryTypes.SELECT}).then(results => {
-        console.log(results);
-    })
 
     database.query("SELECT * FROM user WHERE username = '" + username + "'", {type: database.QueryTypes.SELECT}).then(results => {
-        console.log(results);
 
         if (results.length !== 0) {
-            password_memo = results[0].password;
-            account_memo = results[0].account;
+            const password_memo = results[0].password;
+            const account_memo = results[0].account;
+            const type_memo = results[0].type;
             logger.info(`Tentativo di login positivo da parte di ${req.body.username}`);
             logger.info('pwd memorizzata : ' + password_memo + ' pwd inserita : ' + req.body.password)
             bcrypt.compare(req.body.password, password_memo, (err, result) => {
                 if (result && !err) {
                     req.session.user = {
                         username: req.body.username,
-                        account: account_memo
+                        account: account_memo,
+                        type: type_memo
                     };
                     logger.info(`Login eseguito dall'utente ${req.body.username}`);
                     return res.redirect("/");

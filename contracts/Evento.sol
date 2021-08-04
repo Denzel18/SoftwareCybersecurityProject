@@ -7,7 +7,7 @@ contract Evento {
 
     enum StatoEvento  {attivo, annullato, concluso}
 
-    uint id_evento;
+    uint id;
     string titolo;
     string luogo;
     string data;
@@ -32,7 +32,7 @@ contract Evento {
     uint256 length;
 
     function storeItem(uint id_, string memory titolo_, string memory timestamp_, string memory luogo_, string memory data_, string memory orario_, string memory artista_, uint capienza_) public restricted {
-        id_evento = id_;
+        id = id_;
         timestamp = timestamp_;
         titolo = titolo_;
         luogo = luogo_;
@@ -49,6 +49,10 @@ contract Evento {
         }
     }
 
+
+    function getId() public view returns (uint){
+        return Evento.id;
+    }
 
     function getTitolo() public view returns (string memory){
         return Evento.titolo;
