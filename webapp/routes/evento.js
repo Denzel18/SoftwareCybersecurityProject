@@ -24,6 +24,7 @@ const database = new Sequelize('cybersecurity', 'user', 'user', {
 // const User = new Usermodel(database,Sequelize);
 
 const Contract = require('web3-eth-contract');
+const fs = require("fs");
 
 Contract.setProvider('http://127.0.0.1:22000');
 
@@ -263,7 +264,8 @@ router.post('/newevento', isLoggedIn, async (req, res) => {
 
     //TODO: controlli sugli attributi dell'evento
 
-    //Idea 1: usare la json interface
+    //Fase 1: creazione di un nuovo contratto Evento e deploy
+    //Usare la json interface (attraverso l'abi)
     var fs = require('fs');
     var obj = JSON.parse(fs.readFileSync('../build/contracts/Evento.json', 'utf8'));
     const eventoInterface = obj['abi'];
@@ -280,23 +282,57 @@ router.post('/newevento', isLoggedIn, async (req, res) => {
     }).send({
         from: req.session.user.account
     }).then((instance) => {
-        global.savedAddress = instance.options.address;
-        logger.info("Contract mined at " + savedAddress);
+        global.e_savedAddress = instance.options.address;
+        logger.info("Contract mined at " + e_savedAddress);
     });
 
-    const timestamp = new Date().toISOString();
+
+    //Fase 2: storeItem degli attributi dell'evento
 
     const eventoService = await EventoService.getInstance({
         account: req.session.user.account,
         host: 'http://localhost:22000',
-        address: savedAddress
+        address: e_savedAddress
     });
 
     const evento_info = await eventoService.storeItem(1000, titolo, luogo, data, orario, artista, capienza);
 
+    //Fase 3: inserimento dell'address del contratto Evento nel DB
+
     await database.query({
         query: "INSERT INTO contract (name, address) VALUES ('evento',?)",
-        values: [savedAddress]
+        values: [e_savedAddress]
+    }, function (err, result) {
+        if (err) throw err;
+        global.eventId = result.insertId;
+        logger.info("1 record inserted, ID:" + eventId);
+    });
+
+    //Fase 4: creazione e deploy del contratto Biglietti associato all'evento appena creato
+
+    var biglietti_obj = JSON.parse(fs.readFileSync('../build/contracts/Biglietti.json', 'utf8'));
+    const bigliettiInterface = biglietti_obj['abi'];
+    let newBiglietti = new Contract(bigliettiInterface);
+
+    await newBiglietti.deploy({
+        data: biglietti_obj['bytecode'],
+
+        //address del contratto Evento creato in precedenza, va in input al costruttore di Biglietti
+        arguments: e_savedAddress
+    }).send({
+        from: req.session.user.account
+    }).then((instance) => {
+        global.b_savedAddress = instance.options.address;
+        logger.info("Contract mined at " + b_savedAddress);
+    });
+
+    //Fase 5: inserimento dell'address del nuovo contratto Biglietti sul DB
+
+    let nome_contratto = 'biglietti_evento_'+ eventId;
+    logger.info('Inserendo: '+nome_contratto);
+    await database.query({
+        query: "INSERT INTO contract (name, address) VALUES (?,?)",
+        values: [nome_contratto, b_savedAddress]
     }, function (err, result) {
         if (err) throw err;
         logger.info("1 record inserted, ID:" + result.insertId);
@@ -304,6 +340,7 @@ router.post('/newevento', isLoggedIn, async (req, res) => {
 
 
     return res.redirect("/evento");
+
 
 
 });
