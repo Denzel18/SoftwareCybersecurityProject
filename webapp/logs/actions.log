@@ -1210,3 +1210,271 @@
 2021-08-02T13:28:51.310Z [info]: pwd memorizzata : $2b$10$IinIjD5sqqXoa0Iw9Wq4ruBo7MS1Iuu5sQVmU9chkPKafZ0Xu9Ne. pwd inserita : user
 2021-08-02T13:28:51.397Z [info]: Login eseguito dall'utente user
 2021-08-02T13:28:53.842Z [info]: TEST EVENTO[object Object]
+2021-08-04T15:46:36.904Z [info]: TEST LOGIN
+2021-08-04T15:46:36.906Z [info]: USERNAME : admin - admin
+2021-08-04T15:46:36.919Z [info]: Tentativo di login positivo da parte di admin
+2021-08-04T15:46:36.920Z [info]: pwd memorizzata : $2b$10$STop8hMjsywnmwy.XWAKkunhoGU7MPiiaraSMKjD5KVsqKv1OKj6G pwd inserita : admin
+2021-08-04T15:46:36.990Z [info]: Login eseguito dall'utente admin
+2021-08-04T15:46:37.947Z [info]: TEST EVENTO[object Object]
+2021-08-04T15:46:50.332Z [info]: TEST EVENTO ID0
+2021-08-04T15:46:56.048Z [info]: TEST EVENTO[object Object]
+2021-08-04T15:46:57.384Z [info]: TEST EVENTO ID0
+2021-08-04T15:46:59.643Z [info]: TEST EVENTO[object Object]
+2021-08-04T15:47:01.016Z [info]: GET BIGLIETTI DATO ID EVENTO0
+2021-08-04T15:47:03.144Z [info]: TEST EVENTO[object Object]
+2021-08-04T15:47:08.917Z [info]: TEST EVENTO[object Object]
+2021-08-04T15:47:14.505Z [info]: TEST EVENTO[object Object]
+2021-08-04T15:47:44.189Z [info]: TEST LOGIN
+2021-08-04T15:47:44.191Z [info]: USERNAME : admin - admin
+2021-08-04T15:47:44.207Z [info]: Tentativo di login positivo da parte di admin
+2021-08-04T15:47:44.207Z [info]: pwd memorizzata : $2b$10$STop8hMjsywnmwy.XWAKkunhoGU7MPiiaraSMKjD5KVsqKv1OKj6G pwd inserita : admin
+2021-08-04T15:47:44.283Z [info]: Login eseguito dall'utente admin
+2021-08-04T15:47:45.322Z [info]: TEST EVENTO[object Object]
+2021-08-04T15:47:47.359Z [info]: GET BIGLIETTI DATO ID EVENTO0
+2021-08-04T15:47:48.969Z [info]: TEST EVENTO[object Object]
+2021-08-04T15:48:58.311Z [info]: TEST LOGIN
+2021-08-04T15:48:58.313Z [info]: USERNAME : admin - admin
+2021-08-04T15:48:58.334Z [info]: Tentativo di login positivo da parte di admin
+2021-08-04T15:48:58.335Z [info]: pwd memorizzata : $2b$10$STop8hMjsywnmwy.XWAKkunhoGU7MPiiaraSMKjD5KVsqKv1OKj6G pwd inserita : admin
+2021-08-04T15:48:58.410Z [info]: Login eseguito dall'utente admin
+2021-08-04T15:48:59.500Z [info]: TEST EVENTO[object Object]
+2021-08-04T15:49:05.887Z [info]: TEST EVENTO[object Object]
+2021-08-04T15:49:07.334Z [info]: GET BIGLIETTI DATO ID EVENTO0
+2021-08-04T15:49:11.058Z [info]: TEST EVENTO[object Object]
+2021-08-04T15:49:12.124Z [info]: GET BIGLIETTI DATO ID EVENTO0
+2021-08-04T15:49:17.642Z [info]: TEST EVENTO[object Object]
+2021-08-04T15:49:21.164Z [info]: TEST EVENTO ID0
+2021-08-04T15:49:28.533Z [info]: TEST EVENTO[object Object]
+2021-08-04T15:49:33.507Z [info]: TEST EVENTO ID0
+2021-08-04T15:49:35.375Z [info]: TEST EVENTO[object Object]
+2021-08-04T15:49:37.522Z [info]: TEST EVENTO ID0
+2021-08-04T15:53:25.092Z [info]: TEST LOGIN
+2021-08-04T15:53:25.093Z [info]: USERNAME : admin - admin
+2021-08-04T15:53:25.107Z [info]: Tentativo di login positivo da parte di admin
+2021-08-04T15:53:25.108Z [info]: pwd memorizzata : $2b$10$STop8hMjsywnmwy.XWAKkunhoGU7MPiiaraSMKjD5KVsqKv1OKj6G pwd inserita : admin
+2021-08-04T15:53:25.179Z [info]: Login eseguito dall'utente admin
+2021-08-04T15:53:26.458Z [info]: TEST EVENTO[object Object]
+2021-08-04T15:53:28.568Z [info]: TEST EVENTO ID0
+2021-08-04T15:53:30.406Z [info]: TEST EVENTO[object Object]
+2021-08-04T15:53:31.348Z [info]: GET BIGLIETTI DATO ID EVENTO0
+2021-08-04T15:53:32.770Z [info]: TEST EVENTO[object Object]
+2021-08-04T15:53:37.758Z [info]: TEST EVENTO[object Object]
+2021-08-04T15:53:38.660Z [info]: GET BIGLIETTI DATO ID EVENTO0
+2021-08-04T15:53:46.570Z [info]: TEST EVENTO[object Object]
+2021-08-04T15:53:51.010Z [info]: TEST EVENTO[object Object]
+2021-08-04T15:53:53.565Z [info]: GET BIGLIETTI DATO ID EVENTO0
+2021-08-04T15:53:56.037Z [info]: TEST EVENTO[object Object]
+2021-08-04T15:53:58.203Z [info]: Form di creazione evento
+2021-08-04T15:54:13.981Z [info]: Inizio Salvataggio Evento ...
+2021-08-04T15:54:13.981Z [info]:  Test Parametri:prova, prova, 10/10/2021, ecc...
+2021-08-04T15:54:15.008Z [info]: Contract mined at 0x9ff7c866F0d8A6C7A6E478846F50e334E8cB93Ae
+2021-08-04T15:54:16.038Z [info]: 1 record inserted, ID:5
+2021-08-04T15:54:17.065Z [info]: Contract mined at 0xF0Aab87D559472Deb75C0353225EE9e71B9C2Abb
+2021-08-04T15:54:17.065Z [info]: Inserendo: biglietti_evento_5
+2021-08-04T15:54:19.342Z [info]: TEST EVENTO[object Object]
+2021-08-04T15:54:23.449Z [info]: TEST EVENTO[object Object]
+2021-08-04T15:54:25.834Z [info]: Form di creazione evento
+2021-08-04T15:54:26.874Z [info]: TEST EVENTO[object Object]
+2021-08-04T15:56:18.742Z [info]: TEST LOGIN
+2021-08-04T15:56:18.743Z [info]: USERNAME : admin - admin
+2021-08-04T15:56:18.758Z [info]: Tentativo di login positivo da parte di admin
+2021-08-04T15:56:18.758Z [info]: pwd memorizzata : $2b$10$STop8hMjsywnmwy.XWAKkunhoGU7MPiiaraSMKjD5KVsqKv1OKj6G pwd inserita : admin
+2021-08-04T15:56:18.829Z [info]: Login eseguito dall'utente admin
+2021-08-04T15:56:19.707Z [info]: TEST EVENTO[object Object]
+2021-08-04T15:56:24.399Z [info]: Form di creazione evento
+2021-08-04T15:56:38.610Z [info]: Inizio Salvataggio Evento ...
+2021-08-04T15:56:38.610Z [info]:  Test Parametri:prova, rpova, 10/10/2021, ecc...
+2021-08-04T15:56:39.637Z [info]: Contract mined at 0x131F110145a704E028BCa7B85EAE33E32f94097C
+2021-08-04T15:56:40.671Z [info]: 1 record inserted, ID:7
+2021-08-04T15:56:41.693Z [info]: Contract mined at 0xA5bA1dfb606b5D1A22Ad3be979b88fD4d5173170
+2021-08-04T15:56:41.693Z [info]: Inserendo: biglietti_evento_7
+2021-08-04T15:56:43.156Z [info]: TEST EVENTO[object Object]
+2021-08-04T15:56:45.099Z [info]: TEST EVENTO[object Object]
+2021-08-04T15:56:53.877Z [info]: TEST EVENTO[object Object]
+2021-08-04T15:56:58.000Z [info]: GET BIGLIETTI DATO ID EVENTO0
+2021-08-04T15:59:47.799Z [info]: TEST LOGIN
+2021-08-04T15:59:47.803Z [info]: USERNAME : admin - admin
+2021-08-04T15:59:47.814Z [info]: Tentativo di login positivo da parte di admin
+2021-08-04T15:59:47.814Z [info]: pwd memorizzata : $2b$10$STop8hMjsywnmwy.XWAKkunhoGU7MPiiaraSMKjD5KVsqKv1OKj6G pwd inserita : admin
+2021-08-04T15:59:47.886Z [info]: Login eseguito dall'utente admin
+2021-08-04T15:59:48.700Z [info]: TEST EVENTO[object Object]
+2021-08-04T16:00:49.909Z [info]: TEST LOGIN
+2021-08-04T16:00:49.912Z [info]: USERNAME : admin - admin
+2021-08-04T16:00:49.928Z [info]: Tentativo di login positivo da parte di admin
+2021-08-04T16:00:49.928Z [info]: pwd memorizzata : $2b$10$STop8hMjsywnmwy.XWAKkunhoGU7MPiiaraSMKjD5KVsqKv1OKj6G pwd inserita : admin
+2021-08-04T16:00:50.000Z [info]: Login eseguito dall'utente admin
+2021-08-04T16:00:51.074Z [info]: TEST EVENTO[object Object]
+2021-08-04T16:01:42.709Z [info]: TEST LOGIN
+2021-08-04T16:01:42.712Z [info]: USERNAME : admin - admin
+2021-08-04T16:01:42.727Z [info]: Tentativo di login positivo da parte di admin
+2021-08-04T16:01:42.727Z [info]: pwd memorizzata : $2b$10$STop8hMjsywnmwy.XWAKkunhoGU7MPiiaraSMKjD5KVsqKv1OKj6G pwd inserita : admin
+2021-08-04T16:01:42.804Z [info]: Login eseguito dall'utente admin
+2021-08-04T16:01:43.389Z [info]: TEST EVENTO[object Object]
+2021-08-04T16:04:14.993Z [info]: TEST LOGIN
+2021-08-04T16:04:14.994Z [info]: USERNAME : admin - admin
+2021-08-04T16:04:15.007Z [info]: Tentativo di login positivo da parte di admin
+2021-08-04T16:04:15.007Z [info]: pwd memorizzata : $2b$10$STop8hMjsywnmwy.XWAKkunhoGU7MPiiaraSMKjD5KVsqKv1OKj6G pwd inserita : admin
+2021-08-04T16:04:15.079Z [info]: Login eseguito dall'utente admin
+2021-08-04T16:04:15.909Z [info]: TEST EVENTO[object Object]
+2021-08-04T16:04:19.824Z [info]: TEST EVENTO[object Object]
+2021-08-04T16:08:25.206Z [info]: TEST LOGIN
+2021-08-04T16:08:25.209Z [info]: USERNAME : admin - admin
+2021-08-04T16:08:25.223Z [info]: Tentativo di login positivo da parte di admin
+2021-08-04T16:08:25.223Z [info]: pwd memorizzata : $2b$10$STop8hMjsywnmwy.XWAKkunhoGU7MPiiaraSMKjD5KVsqKv1OKj6G pwd inserita : admin
+2021-08-04T16:08:25.296Z [info]: Login eseguito dall'utente admin
+2021-08-04T16:08:29.440Z [info]: TEST EVENTO[object Object]
+2021-08-04T16:08:30.796Z [info]: GET BIGLIETTI DATO ID EVENTO0
+2021-08-04T16:12:31.877Z [info]: TEST LOGIN
+2021-08-04T16:12:31.879Z [info]: USERNAME : admin - admin
+2021-08-04T16:12:31.894Z [info]: Tentativo di login positivo da parte di admin
+2021-08-04T16:12:31.895Z [info]: pwd memorizzata : $2b$10$STop8hMjsywnmwy.XWAKkunhoGU7MPiiaraSMKjD5KVsqKv1OKj6G pwd inserita : admin
+2021-08-04T16:12:31.969Z [info]: Login eseguito dall'utente admin
+2021-08-04T16:12:32.546Z [info]: TEST EVENTO[object Object]
+2021-08-04T16:12:36.140Z [info]: TEST EVENTO ID0
+2021-08-04T16:12:41.269Z [info]: TEST EVENTO[object Object]
+2021-08-04T16:12:42.291Z [info]: GET BIGLIETTI DATO ID EVENTO0
+2021-08-04T16:12:48.864Z [info]: TEST EVENTO[object Object]
+2021-08-04T16:12:56.008Z [info]: TEST EVENTO[object Object]
+2021-08-04T16:13:00.192Z [info]: TEST EVENTO[object Object]
+2021-08-04T16:13:03.436Z [info]: TEST EVENTO[object Object]
+2021-08-04T16:13:09.427Z [info]: TEST EVENTO[object Object]
+2021-08-04T16:13:14.555Z [info]: TEST EVENTO[object Object]
+2021-08-04T16:13:16.053Z [info]: GET BIGLIETTI DATO ID EVENTO0
+2021-08-04T16:13:20.840Z [info]: TEST EVENTO[object Object]
+2021-08-04T16:13:25.259Z [info]: TEST EVENTO ID0
+2021-08-04T16:13:30.839Z [info]: TEST EVENTO[object Object]
+2021-08-04T16:13:32.142Z [info]: TEST EVENTO[object Object]
+2021-08-04T16:13:34.204Z [info]: GET BIGLIETTI DATO ID EVENTO0
+2021-08-04T16:13:36.780Z [info]: TEST EVENTO[object Object]
+2021-08-04T16:13:38.008Z [info]: TEST EVENTO ID0
+2021-08-04T16:13:41.769Z [info]: TEST EVENTO[object Object]
+2021-08-04T16:13:42.841Z [info]: GET BIGLIETTI DATO ID EVENTO0
+2021-08-04T16:13:45.605Z [info]: TEST EVENTO[object Object]
+2021-08-04T16:13:46.708Z [info]: GET BIGLIETTI DATO ID EVENTO0
+2021-08-04T16:13:50.828Z [info]: TEST EVENTO[object Object]
+2021-08-04T16:13:57.520Z [info]: TEST EVENTO ID1
+2021-08-04T16:14:11.350Z [info]: TEST EVENTO ID3
+2021-08-04T16:16:36.605Z [info]: TEST LOGIN
+2021-08-04T16:16:36.607Z [info]: USERNAME : admin - admin
+2021-08-04T16:16:36.619Z [info]: Tentativo di login positivo da parte di admin
+2021-08-04T16:16:36.619Z [info]: pwd memorizzata : $2b$10$STop8hMjsywnmwy.XWAKkunhoGU7MPiiaraSMKjD5KVsqKv1OKj6G pwd inserita : admin
+2021-08-04T16:16:36.692Z [info]: Login eseguito dall'utente admin
+2021-08-04T16:16:37.756Z [info]: TEST EVENTO[object Object]
+2021-08-04T16:16:45.280Z [info]: TEST EVENTO[object Object]
+2021-08-04T16:17:00.519Z [info]: TEST EVENTO ID0
+2021-08-04T16:18:46.830Z [info]: TEST LOGIN
+2021-08-04T16:18:46.831Z [info]: USERNAME : admin - admin
+2021-08-04T16:18:55.848Z [info]: TEST LOGIN
+2021-08-04T16:18:55.848Z [info]: USERNAME : admin - admin
+2021-08-04T16:19:59.033Z [info]: TEST LOGIN
+2021-08-04T16:19:59.034Z [info]: USERNAME : admin - admin
+2021-08-04T16:20:55.021Z [info]: TEST LOGIN
+2021-08-04T16:20:55.021Z [info]: USERNAME : admin - admin
+2021-08-04T16:20:55.028Z [info]: Tentativo di login positivo da parte di admin
+2021-08-04T16:20:55.028Z [info]: pwd memorizzata : $2b$10$STop8hMjsywnmwy.XWAKkunhoGU7MPiiaraSMKjD5KVsqKv1OKj6G pwd inserita : admin
+2021-08-04T16:20:55.100Z [info]: Login eseguito dall'utente admin
+2021-08-04T16:20:56.472Z [info]: TEST EVENTO[object Object]
+2021-08-04T16:22:18.214Z [info]: TEST LOGIN
+2021-08-04T16:22:18.216Z [info]: USERNAME : admin - admin
+2021-08-04T16:22:18.232Z [info]: Tentativo di login positivo da parte di admin
+2021-08-04T16:22:18.232Z [info]: pwd memorizzata : $2b$10$STop8hMjsywnmwy.XWAKkunhoGU7MPiiaraSMKjD5KVsqKv1OKj6G pwd inserita : admin
+2021-08-04T16:22:18.305Z [info]: Login eseguito dall'utente admin
+2021-08-04T16:22:27.178Z [info]: TEST EVENTO[object Object]
+2021-08-04T16:24:17.323Z [info]: Form di creazione evento
+2021-08-04T16:24:30.162Z [info]: Inizio Salvataggio Evento ...
+2021-08-04T16:24:30.162Z [info]:  Test Parametri:prova, prova, 10/10/2021, ecc...
+2021-08-04T16:24:31.194Z [info]: Contract mined at 0xF8BD2aE8D638D61626Fe9820cd2cCc9fe6A81101
+2021-08-04T16:24:32.227Z [info]: 1 record inserted, ID:9
+2021-08-04T16:24:33.249Z [info]: Contract mined at 0x18a8Dbb6a80ae7acc264Ef508Cad55403D2E973e
+2021-08-04T16:24:33.249Z [info]: Inserendo: biglietti_evento_9
+2021-08-04T16:24:45.793Z [info]: TEST EVENTO[object Object]
+2021-08-04T16:24:47.715Z [info]: TEST EVENTO[object Object]
+2021-08-04T16:27:23.708Z [info]: TEST LOGIN
+2021-08-04T16:27:23.711Z [info]: USERNAME : admin - admin
+2021-08-04T16:27:23.721Z [info]: Tentativo di login positivo da parte di admin
+2021-08-04T16:27:23.722Z [info]: pwd memorizzata : $2b$10$STop8hMjsywnmwy.XWAKkunhoGU7MPiiaraSMKjD5KVsqKv1OKj6G pwd inserita : admin
+2021-08-04T16:27:23.792Z [info]: Login eseguito dall'utente admin
+2021-08-04T16:27:24.703Z [info]: TEST EVENTO[object Object]
+2021-08-04T16:27:26.252Z [info]: TEST EVENTO[object Object]
+2021-08-04T16:27:44.169Z [info]: TEST EVENTO[object Object]
+2021-08-04T16:28:57.780Z [info]: TEST LOGIN
+2021-08-04T16:28:57.783Z [info]: USERNAME : admin - admin
+2021-08-04T16:28:57.793Z [info]: Tentativo di login positivo da parte di admin
+2021-08-04T16:28:57.794Z [info]: pwd memorizzata : $2b$10$STop8hMjsywnmwy.XWAKkunhoGU7MPiiaraSMKjD5KVsqKv1OKj6G pwd inserita : admin
+2021-08-04T16:28:57.865Z [info]: Login eseguito dall'utente admin
+2021-08-04T16:28:59.019Z [info]: TEST EVENTO[object Object]
+2021-08-04T16:29:05.853Z [info]: TEST LOGIN
+2021-08-04T16:29:05.853Z [info]: USERNAME : user - user
+2021-08-04T16:29:05.855Z [info]: Tentativo di login positivo da parte di user
+2021-08-04T16:29:05.855Z [info]: pwd memorizzata : $2b$10$CsC/5Mcf8XTXiZkNndc5PecVJazyHRezC89DiVYAVPjbdaI8sm1fq pwd inserita : user
+2021-08-04T16:29:05.923Z [info]: Login eseguito dall'utente user
+2021-08-04T16:29:07.215Z [info]: TEST EVENTO[object Object]
+2021-08-04T16:30:00.448Z [info]: TEST LOGIN
+2021-08-04T16:30:00.450Z [info]: USERNAME : admin - admin
+2021-08-04T16:30:00.461Z [info]: Tentativo di login positivo da parte di admin
+2021-08-04T16:30:00.461Z [info]: pwd memorizzata : $2b$10$STop8hMjsywnmwy.XWAKkunhoGU7MPiiaraSMKjD5KVsqKv1OKj6G pwd inserita : admin
+2021-08-04T16:30:00.532Z [info]: Login eseguito dall'utente admin
+2021-08-04T16:30:02.064Z [info]: TEST EVENTO[object Object]
+2021-08-04T16:33:17.121Z [info]: TEST LOGIN
+2021-08-04T16:33:17.122Z [info]: USERNAME : user - user
+2021-08-04T16:33:17.141Z [info]: Tentativo di login positivo da parte di user
+2021-08-04T16:33:17.141Z [info]: pwd memorizzata : $2b$10$CsC/5Mcf8XTXiZkNndc5PecVJazyHRezC89DiVYAVPjbdaI8sm1fq pwd inserita : user
+2021-08-04T16:33:17.215Z [info]: Login eseguito dall'utente user
+2021-08-04T16:33:18.052Z [info]: TEST EVENTO[object Object]
+2021-08-04T16:33:33.849Z [info]: TEST LOGIN
+2021-08-04T16:33:33.849Z [info]: USERNAME : invalidator - invalidator
+2021-08-04T16:33:33.858Z [info]: Tentativo di login positivo da parte di invalidator
+2021-08-04T16:33:33.858Z [info]: pwd memorizzata : $2b$10$ENaa26rmvVJIyH.O4hkzQ.XlmyKv5M4UpjGNsor0hOrwU9z3mDUOe pwd inserita : invalidator
+2021-08-04T16:33:33.930Z [info]: Login eseguito dall'utente invalidator
+2021-08-04T16:33:35.914Z [info]: TEST EVENTO[object Object]
+2021-08-04T16:33:37.416Z [info]: GET BIGLIETTI DATO ID EVENTO0
+2021-08-04T16:33:41.938Z [info]: TEST EVENTO[object Object]
+2021-08-04T16:33:43.213Z [info]: GET BIGLIETTI DATO ID EVENTO0
+2021-08-04T16:33:47.515Z [info]: TEST EVENTO[object Object]
+2021-08-04T16:33:49.996Z [info]: GET BIGLIETTI DATO ID EVENTO0
+2021-08-04T16:33:56.947Z [info]: TEST EVENTO[object Object]
+2021-08-04T16:33:58.533Z [info]: GET BIGLIETTI DATO ID EVENTO0
+2021-08-04T16:34:03.924Z [info]: TEST EVENTO[object Object]
+2021-08-04T16:34:07.163Z [info]: GET BIGLIETTI DATO ID EVENTO0
+2021-08-04T16:34:12.330Z [info]: TEST EVENTO[object Object]
+2021-08-04T16:34:16.736Z [info]: GET BIGLIETTI DATO ID EVENTO0
+2021-08-04T16:36:30.204Z [info]: TEST LOGIN
+2021-08-04T16:36:30.204Z [info]: USERNAME : user - user
+2021-08-04T16:36:30.211Z [info]: Tentativo di login positivo da parte di user
+2021-08-04T16:36:30.211Z [info]: pwd memorizzata : $2b$10$CsC/5Mcf8XTXiZkNndc5PecVJazyHRezC89DiVYAVPjbdaI8sm1fq pwd inserita : user
+2021-08-04T16:36:30.283Z [info]: Login eseguito dall'utente user
+2021-08-04T16:36:31.459Z [info]: TEST EVENTO[object Object]
+2021-08-04T16:36:34.596Z [info]: TEST EVENTO[object Object]
+2021-08-04T16:36:37.056Z [info]: TEST EVENTO[object Object]
+2021-08-04T16:36:42.335Z [info]: TEST EVENTO[object Object]
+2021-08-04T16:36:48.635Z [info]: TEST EVENTO[object Object]
+2021-08-04T16:36:56.107Z [info]: TEST EVENTO[object Object]
+2021-08-04T16:36:59.833Z [info]: TEST EVENTO[object Object]
+2021-08-04T16:37:03.731Z [info]: TEST EVENTO[object Object]
+2021-08-04T16:37:04.630Z [info]: TEST EVENTO ID0
+2021-08-04T16:37:07.270Z [info]: TEST EVENTO[object Object]
+2021-08-04T16:37:09.247Z [info]: TEST EVENTO ID0
+2021-08-04T16:37:11.144Z [info]: TEST EVENTO[object Object]
+2021-08-04T16:37:53.838Z [info]: TEST LOGIN
+2021-08-04T16:37:53.840Z [info]: USERNAME : user - user
+2021-08-04T16:38:05.754Z [info]: TEST LOGIN
+2021-08-04T16:38:05.755Z [info]: USERNAME : user - user
+2021-08-04T16:38:05.762Z [info]: Tentativo di login positivo da parte di user
+2021-08-04T16:38:05.762Z [info]: pwd memorizzata : $2b$10$CsC/5Mcf8XTXiZkNndc5PecVJazyHRezC89DiVYAVPjbdaI8sm1fq pwd inserita : user
+2021-08-04T16:38:05.836Z [info]: Login eseguito dall'utente user
+2021-08-04T16:38:07.716Z [info]: TEST EVENTO[object Object]
+2021-08-04T16:38:09.599Z [info]: TEST EVENTO ID0
+2021-08-04T16:38:15.099Z [info]: TEST EVENTO[object Object]
+2021-08-04T16:38:18.317Z [info]: TEST EVENTO[object Object]
+2021-08-04T16:38:58.713Z [info]: TEST LOGIN
+2021-08-04T16:38:58.713Z [info]: USERNAME : invalidator - invalidator
+2021-08-04T16:38:58.717Z [info]: Tentativo di login positivo da parte di invalidator
+2021-08-04T16:38:58.717Z [info]: pwd memorizzata : $2b$10$ENaa26rmvVJIyH.O4hkzQ.XlmyKv5M4UpjGNsor0hOrwU9z3mDUOe pwd inserita : invalidator
+2021-08-04T16:38:58.785Z [info]: Login eseguito dall'utente invalidator
+2021-08-04T16:39:00.561Z [info]: TEST EVENTO[object Object]
+2021-08-04T16:39:03.195Z [info]: TEST EVENTO ID0
+2021-08-04T16:39:05.787Z [info]: TEST EVENTO[object Object]
+2021-08-04T16:39:06.759Z [info]: GET BIGLIETTI DATO ID EVENTO0
+2021-08-04T16:39:10.727Z [info]: TEST EVENTO[object Object]
+2021-08-04T16:39:12.773Z [info]: GET BIGLIETTI DATO ID EVENTO0
+2021-08-04T16:39:17.557Z [info]: TEST EVENTO[object Object]

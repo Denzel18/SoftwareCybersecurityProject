@@ -32,12 +32,17 @@ Contract.setProvider('http://127.0.0.1:22000');
 router.get('/', isLoggedIn, async (req, res) => {
 
     logger.info('TEST EVENTO' + req.body)
-
-    database.query('SELECT * FROM contract where lower(name)=\'evento\'', {type: database.QueryTypes.SELECT}).then(async results => {
-
+    try{
+        database.query({
+        query: "SELECT * FROM contract where lower(name)=\'evento\'",
+        type: database.QueryTypes.SELECT}).then(async results => {
+        // console.log(results)
         if (results.length !== 0) {
-            let list_out = []
-            // for each found event
+        let list_out = []
+        // for each found event
+        let i = 0;
+        console.log('ci sono n: '+results.length+' eventi')
+        
             for (const evento of results) {
                 // get an instance of the event
                 const eventoService = await EventoService.getInstance({
@@ -46,7 +51,7 @@ router.get('/', isLoggedIn, async (req, res) => {
                     // host URL
                     host: 'http://localhost:22000',
                     // contract account address
-                    address: evento.address
+                    address: evento[i].address
                 });
 
                 // get id of the event
@@ -92,8 +97,18 @@ router.get('/', isLoggedIn, async (req, res) => {
                         // invalidate the ticket
                         remainingSlots = await bigliettiSevice.getPostiRimanenti();
                     }
-                });
-
+                }).catch( error => {
+                    //return res.status(400).json({ error: error.toString() });
+                    // req.flash('error', 'errore con la query');
+                    error = {
+                        status : '500',
+                        stack  : error,
+                        message : 'Errore Query'
+                    }
+                    
+                    return res.render("error" , {title: 'Errore' , error : error, user: req.session.user});
+                })
+        
                 const evnt = {
                     id: id,
                     titolo: titolo,
@@ -106,7 +121,9 @@ router.get('/', isLoggedIn, async (req, res) => {
                     timestamp: timestamp,
                     remainingSlots: remainingSlots
                 }
+                i= i + 1 ; 
                 list_out.push(evnt)
+                
             }
 
             return res.render('listaEventi', {title: 'Lista Eventi', results: list_out, user: req.session.user})
@@ -114,8 +131,25 @@ router.get('/', isLoggedIn, async (req, res) => {
             req.flash('error', 'ERRORE, nessun contratto evento trovato.');
             return res.redirect("/");
         }
-
+    }).catch( error => {
+        //return res.status(400).json({ error: error.toString() });
+        // req.flash('error', 'errore con la query');
+        error = {
+            status : '500',
+            stack  : error,
+            message : 'Errore Query'
+        }
+        
+        return res.render("error" , {title: 'Errore' , error : error, user: req.session.user});
     })
+    }catch(error){
+        error = {
+            status : '500',
+            stack  : error,
+            message : 'Errore Query'
+        }
+        return res.render("error" , {title: 'Errore' , error : error, user: req.session.user});
+    };
 });
 
 
@@ -124,10 +158,13 @@ router.get("/id/:id", isLoggedIn, (req, res) => {
     const id = req.params.id
 
     logger.info('TEST EVENTO ID' + id)
-
-    database.query('SELECT * FROM contract WHERE lower(name)=\'evento\' AND id_evento =' + id, {type: database.QueryTypes.SELECT}).then(async result => {
-
+try{
+    database.query({
+        query: 'SELECT * FROM contract WHERE lower(name) like ? AND id_evento = ?',
+        values: ['evento', id],
+        type: database.QueryTypes.SELECT}).then(async result => {
         if (result.length !== 0) {
+            // console.log('result '+result[0][0].address)
             // get an instance of the event
             const eventoService = await EventoService.getInstance({
                 // user account address
@@ -135,8 +172,9 @@ router.get("/id/:id", isLoggedIn, (req, res) => {
                 // host URL
                 host: 'http://localhost:22000',
                 // contract account address
-                address: result[0].address
+                address: result[0][0].address
             });
+
 
             // get id of the event
             const id = await eventoService.getId();
@@ -180,6 +218,16 @@ router.get("/id/:id", isLoggedIn, (req, res) => {
                     // invalidate the ticket
                     remainingSlots = await bigliettiSevice.getPostiRimanenti();
                 }
+            }).catch( error => {
+                //return res.status(400).json({ error: error.toString() });
+                // req.flash('error', 'errore con la query');
+                error = {
+                    status : '500',
+                    stack  : error,
+                    message : 'Errore Query'
+                }
+                
+                return res.render("error" , {title: 'Errore' , error : error, user: req.session.user});
             });
 
             const evnt = {
@@ -199,7 +247,27 @@ router.get("/id/:id", isLoggedIn, (req, res) => {
             return res.redirect('/');
         }
 
+    }).catch( error => {
+        //return res.status(400).json({ error: error.toString() });
+        // req.flash('error', 'errore con la query');
+        error = {
+            status : '500',
+            stack  : error,
+            message : 'Errore Query'
+        }
+        
+        return res.render("error" , {title: 'Errore' , error : error, user: req.session.user});
     })
+
+}catch(error){
+        error = {
+            status : '500',
+            stack  : error,
+            message : 'Errore Query'
+        }
+        
+        return res.render("error" , {title: 'Errore' , error : error, user: req.session.user});
+    }
 });
 
 router.get("/id/:id/biglietti", isLoggedIn, isAdminOrInvalidator, async (req, res) => {
@@ -208,32 +276,57 @@ router.get("/id/:id/biglietti", isLoggedIn, isAdminOrInvalidator, async (req, re
 
     logger.info('GET BIGLIETTI DATO ID EVENTO' + id)
 
-
-    database.query('SELECT * FROM contract WHERE lower(name) like \'biglietti_evento_%\' AND id_evento=' + id, {type: database.QueryTypes.SELECT}).then(async result => {
-        if (result.length !== 0) {
-            // get an instance of the tickets
-            const bigliettiSevice = await BigliettiService.getInstance({
-                // user account address
-                account: req.session.user.account,
-                // host URL
-                host: 'http://localhost:22000',
-                // contract account address
-                address: result[0].address
-            });
-
-            const biglietti = await bigliettiSevice.getBiglietti();
-
-            return res.render('listaBiglietti', {
-                title: 'Biglietti Venduti',
-                results: biglietti,
-                user: req.session.user,
-                id_evento: id
-            })
-        } else {
-            req.flash('error', 'ERRORE, contratto biglietti non trovato.');
-            return res.redirect('/');
+    try{
+        database.query({
+            query: "SELECT * FROM contract WHERE lower(name) like ? AND id_evento= ?",
+            values: ['biglietti_evento_%',id],
+            type: database.QueryTypes.SELECT}).then(async result => {
+    
+            if (result.length !== 0) {
+                console.log('result biglietti : ' + result[0][0].address)     
+                // get an instance of the tickets
+                const bigliettiSevice = await BigliettiService.getInstance({
+                    // user account address
+                    account: req.session.user.account,
+                    // host URL
+                    host: 'http://localhost:22000',
+                    // contract account address
+                    address: result[0][0].address
+                });
+    
+                const biglietti = await bigliettiSevice.getBiglietti();
+    
+                return res.render('listaBiglietti', {
+                    title: 'Biglietti Venduti',
+                    results: biglietti,
+                    user: req.session.user,
+                    id_evento: id
+                })
+            } else {
+                req.flash('error', 'ERRORE, contratto biglietti non trovato.');
+                return res.redirect('/');
+            }
+        }).catch(error => {
+            error = {
+                status : '500',
+                stack  : error,
+                message : 'Errore Query'
+            }
+            
+            return res.render("error" , {title: 'Errore' , error : error, user: req.session.user});
+        });
+    }catch(error){
+        error = {
+            status : '500',
+            stack  : error,
+            message : 'Errore Query'
         }
-    });
+        
+        return res.render("error" , {title: 'Errore' , error : error, user: req.session.user});
+
+    }
+
+
 });
 
 router.get("/id/:id/acquistabiglietto", isLoggedIn, async (req, res) => {
@@ -251,7 +344,7 @@ router.get("/id/:id/acquistabiglietto", isLoggedIn, async (req, res) => {
 router.post("/id/:id/acquistabiglietto", isLoggedIn, async (req, res) => {
 
     const id = req.params.id;
-
+try{
     await database.query({
         query: 'SELECT * FROM contract WHERE lower(name) = ? AND id_evento = ?',
         values: ['evento', id]
@@ -302,17 +395,20 @@ router.post("/id/:id/acquistabiglietto", isLoggedIn, async (req, res) => {
 
                     const sigillo = createTaxSeal();
 
-                    database.query('SELECT * FROM contract WHERE lower(name) like \'biglietti_evento_%\' AND id_evento=' + id_evento, {type: database.QueryTypes.SELECT}).then(async result => {
-                        if (result.length !== 0) {
-                            // get an instance of the tickets
-                            const bigliettiSevice = await BigliettiService.getInstance({
-                                // user account address
-                                account: req.session.user.account,
-                                // host URL
-                                host: 'http://localhost:22000',
-                                // contract account address
-                                address: result[0].address
-                            });
+                    database.query({
+                        query: "SELECT * FROM contract WHERE lower(name) like ? AND id_evento= ?",
+                        values: ['biglietti_evento_%', id_evento],
+                        type: database.QueryTypes.SELECT}).then(async result => {
+                            if (result.length !== 0) {
+                                // get an instance of the tickets
+                                const bigliettiSevice = await BigliettiService.getInstance({
+                                    // user account address
+                                    account: req.session.user.account,
+                                    // host URL
+                                    host: 'http://localhost:22000',
+                                    // contract account address
+                                    address: result[0][0].address
+                                });
 
                             // check remaining slots
                             const remainingSlots = await bigliettiSevice.getPostiRimanenti();
@@ -328,6 +424,14 @@ router.post("/id/:id/acquistabiglietto", isLoggedIn, async (req, res) => {
                             req.flash('error', 'ERRORE, contratto biglietti non trovato.');
                         }
                         return res.redirect('/');
+                    }).catch(error => {
+                        error = {
+                            status : '500',
+                            stack  : error,
+                            message : 'Errore Query'
+                        }
+                        
+                        return res.render("error" , {title: 'Errore' , error : error, user: req.session.user});
                     });
                 } else {
                     req.flash('error', 'ERRORE, pagamento fallito.');
@@ -335,7 +439,25 @@ router.post("/id/:id/acquistabiglietto", isLoggedIn, async (req, res) => {
                 }
             }
         }
+    }).catch(error => {
+        error = {
+            status : '500',
+            stack  : error,
+            message : 'Errore Query'
+        }
+        
+        return res.render("error" , {title: 'Errore' , error : error, user: req.session.user});
     });
+
+}catch(error){
+    error = {
+        status : '500',
+        stack  : error,
+        message : 'Errore Query'
+    }
+    
+    return res.render("error" , {title: 'Errore' , error : error, user: req.session.user});
+}
 });
 
 
@@ -352,6 +474,14 @@ router.get('/newevento', isLoggedIn, isAdmin, (req, res) => {
             csrfToken: req.csrfToken(),
             id: nextEventId
         });
+    }).catch(error => {
+        error = {
+            status : '500',
+            stack  : error,
+            message : 'Errore Query'
+        }
+        
+        return res.render("error" , {title: 'Errore' , error : error, user: req.session.user});
     });
 });
 
@@ -413,7 +543,15 @@ router.post('/newevento', isLoggedIn, isAdmin, async (req, res) => {
     }).then(result => {
         global.eventId = result[0];
         logger.info("1 record inserted, ID:" + eventId);
-    });
+    }).catch(error => {
+        error = {
+            status : '500',
+            stack  : error,
+            message : 'Errore Query'
+        }
+        
+        return res.render("error" , {title: 'Errore' , error : error, user: req.session.user});
+    });;
 
     //Fase 4: creazione e deploy del contratto Biglietti associato all'evento appena creato
 
@@ -443,8 +581,15 @@ router.post('/newevento', isLoggedIn, isAdmin, async (req, res) => {
     }, function (err, result) {
         if (err) throw err;
         logger.info("1 record inserted, ID:" + result.insertId);
-    });
-
+    }).catch(error => {
+        error = {
+            status : '500',
+            stack  : error,
+            message : 'Errore Query'
+        }
+        
+        return res.render("error" , {title: 'Errore' , error : error, user: req.session.user});
+    });;
 
     return res.redirect('/');
 });
@@ -482,7 +627,15 @@ router.get("/id/:id/invalidaBiglietto/id/:id_biglietto", isLoggedIn, isInvalidat
         }
 
         return res.redirect('/');
-    });
+    }).catch(error => {
+        error = {
+            status : '500',
+            stack  : error,
+            message : 'Errore Query'
+        }
+        
+        return res.render("error" , {title: 'Errore' , error : error, user: req.session.user});
+    });;
 });
 
 router.get("/id/:id/annullaBiglietto/id/:id_biglietto", isLoggedIn, isAdmin, async (req, res) => {
@@ -551,7 +704,15 @@ router.get("/id/:id/annullaBiglietto/id/:id_biglietto", isLoggedIn, isAdmin, asy
             req.flash('error', 'ERRORE, contratto evento non trovato.');
             return res.redirect('/');
         }
-    });
+    }).catch(error => {
+        error = {
+            status : '500',
+            stack  : error,
+            message : 'Errore Query'
+        }
+        
+        return res.render("error" , {title: 'Errore' , error : error, user: req.session.user});
+    });;
 });
 
 router.get("/id/:id/concludiEvento", isLoggedIn, isAdmin, async (req, res) => {
@@ -585,6 +746,14 @@ router.get("/id/:id/concludiEvento", isLoggedIn, isAdmin, async (req, res) => {
         }
 
         return res.redirect('/');
+    }).catch(error => {
+        error = {
+            status : '500',
+            stack  : error,
+            message : 'Errore Query'
+        }
+        
+        return res.render("error" , {title: 'Errore' , error : error, user: req.session.user});
     });
 });
 
@@ -618,6 +787,14 @@ router.get("/id/:id/annullaEvento", isLoggedIn, isAdmin, async (req, res) => {
         }
 
         return res.redirect('/');
+    }).catch(error => {
+        error = {
+            status : '500',
+            stack  : error,
+            message : 'Errore Query'
+        }
+        
+        return res.render("error" , {title: 'Errore' , error : error, user: req.session.user});
     });
 });
 

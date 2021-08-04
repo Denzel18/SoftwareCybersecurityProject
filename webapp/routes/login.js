@@ -33,13 +33,15 @@ router.post('/', (req, res) => {
     password = req.body.password;
     logger.info('USERNAME : ' + username + ' - ' + password)
 
-
-    database.query("SELECT * FROM user WHERE username = '" + username + "'", {type: database.QueryTypes.SELECT}).then(results => {
+    database.query({
+        query: 'SELECT * FROM user WHERE username = ?',
+        values: [username],
+        type: database.QueryTypes.SELECT}).then(async results => {
 
         if (results.length !== 0) {
-            const password_memo = results[0].password;
-            const account_memo = results[0].account;
-            const type_memo = results[0].type;
+            const password_memo = results[0][0].password;
+            const account_memo = results[0][0].account;
+            const type_memo = results[0][0].type;
             logger.info(`Tentativo di login positivo da parte di ${req.body.username}`);
             logger.info('pwd memorizzata : ' + password_memo + ' pwd inserita : ' + req.body.password)
             bcrypt.compare(req.body.password, password_memo, (err, result) => {
@@ -63,31 +65,10 @@ router.post('/', (req, res) => {
             return res.redirect("/login");
         }
 
-    })
-
-
-    // User.findOne({where : { username: username }}, (err, user) => {
-    //     if(err || !user) {
-    //         logger.info(`Tentativo di login errato con username ${req.body.username}`);
-    //         req.flash("error", "Utente o password errati, riprovare!");
-    //         return res.redirect("/");
-    //     } else {
-    //         bcrypt.compare(req.body.password, user.password, (err, result) => {
-    //             if(result && !err) {
-    //                 req.session.user = {
-    //                     username: req.body.username,
-    //                     account: user.account
-    //                 };
-    //                 logger.info(`Login eseguito dall'utente ${req.body.username}`);
-    //                 return res.redirect("/");
-    //             } else {
-    //                 logger.info(`Tentativo di login errato da parte di ${req.body.username}`);
-    //                 req.flash("error", "Utente o password errati, riprovare!");
-    //                 return res.redirect("/login");
-    //             }
-    //         });
-    //     }
-    // });
+    }).catch(error => {
+        req.flash("error", "Utente o password errati, riprovare!");
+        return res.redirect("/login");
+    });
 });
 
 router.get("/logout", (req, res) => {

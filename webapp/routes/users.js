@@ -84,9 +84,11 @@ router.post('/new', (req, res) => {
                     // let month = date_ob.getMonth() + 1;
                     // let year = date_ob.getFullYear();
                     // data_ = "'" + year + "-" + month + "-" + date + "'";
-                    query_ = "INSERT into user (name, username, password, account) values ('" + nominativo + "','" + username + "','" + password_ + "','" + account + "');";
-
-                    database.query(query_).then(results => {
+                    
+                    database.query({
+                        query : "INSERT into user (name, username, password, account) values (?,?,?,?)",
+                        values : [nominativo, username, password_, account], 
+                        type: database.QueryTypes.INSERT}).then(results => {
                         console.log(results);
                         if (results !== 0) {
                             console.log(req.body);
@@ -96,6 +98,14 @@ router.post('/new', (req, res) => {
                             console.log('Errore creazione utente');
                             return res.redirect("/user/new");
                         }
+                    }).catch(error => {
+                        error = {
+                            status : '500',
+                            stack  : error,
+                            message : 'Errore Query'
+                        }
+                        
+                        return res.render("error" , {title: 'Errore' , error : error, user: req.session.user});
                     });
                 }
             })
