@@ -89,8 +89,8 @@ truffle migrate --reset
 
 ### Interfaccia WEB 
 
-* [*APP*](localhost:3000)
-* [*RETE*](localhost:8999)
+* [*APP*](http://localhost:3000)
+* [*RETE*](http://localhost:8999)
 
 ## Relazione 
 La [relazione](https://github.com/) è visionabile, per ulteriori dettagli implementativi e di progettazione 
