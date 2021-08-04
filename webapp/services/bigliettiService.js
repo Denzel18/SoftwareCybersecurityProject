@@ -59,8 +59,8 @@ class bigliettiService extends ContractService {
         return this.send(this.contract.methods.getTipoBiglietto(id));
     }
 
-    async getPostiRimanenti(id){
-        return this.send(this.contract.methods.getPostiRimanenti());
+    async getPostiRimanenti(){
+        return this.call(this.contract.methods.getPostiRimanenti());
     }
 
     async statusPagamento(codiceTransazione){

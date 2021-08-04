@@ -29,7 +29,7 @@
                 <td><%= item.data %></td>
                 <td><%= item.orario %></td>
                 <td><%= item.artista %></td>
-                <td><%= item.capienza %></td>
+                <td><%= item.remainingSlots + '/' + item.capienza %></td>
                 <td><%= item.stato %></td>
                 <td><%= item.timestamp %></td>
                 <td><a class="btn btn-primary" href="/evento/id/<%= item.id %>">Dettagli evento</a></td>

@@ -59,6 +59,14 @@ class EventoService extends ContractService {
         return this.call(this.contract.methods.getTimestamp());
     }
 
+    async setConclusoEvento() {
+        return this.send(this.contract.methods.setConclusoEvento());
+    }
+
+    async setAnnulatoEvento() {
+        return this.send(this.contract.methods.setAnnulatoEvento());
+    }
+
 }
 
 module.exports = EventoService;

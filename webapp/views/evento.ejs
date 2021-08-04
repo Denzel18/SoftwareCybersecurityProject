@@ -20,11 +20,21 @@
             <p><b>Artista Evento:</b> <%= result.artista %></p>
         </div>
         <div class="row">
-            <p><b>Capienza Evento:</b> <%= result.capienza %></p>
+            <p><b>Capienza Evento:</b> <%= result.remainingSlots + '/' + result.capienza %></p>
         </div>
         <div class="row">
             <p><b>Stato Evento:</b> <%= result.stato %></p>
         </div>
-        <a class="btn btn-primary" href="/evento/id/<%= result.id %>/acquistabiglietto">Acquista Biglietto</a>
+        <% if(result.stato === 'Attivo') { %>
+            <div class="row mt-2">
+                <a class="btn btn-primary" href="/evento/id/<%= result.id %>/acquistabiglietto">Acquista Biglietto</a>
+            </div>
+            <div class="row mt-2">
+                <a class="btn btn-primary" href="/evento/id/<%= result.id %>/concludiEvento">Concludi Evento</a>
+            </div>
+            <div class="row mt-2">
+                <a class="btn btn-primary" href="/evento/id/<%= result.id %>/annullaEvento">Annulla Evento</a>
+            </div>
+        <% } %>
     </div>
 </div>

@@ -29,13 +29,11 @@ const fs = require("fs");
 
 Contract.setProvider('http://127.0.0.1:22000');
 
-
-router.get('/', isLoggedIn, (req, res) => {
+router.get('/', isLoggedIn, async (req, res) => {
 
     logger.info('TEST EVENTO' + req.body)
 
     database.query('SELECT * FROM contract where lower(name)=\'evento\'', {type: database.QueryTypes.SELECT}).then(async results => {
-
 
         if (results.length !== 0) {
             let list_out = []
@@ -70,6 +68,32 @@ router.get('/', isLoggedIn, (req, res) => {
                 // get timestamp of the event
                 const timestamp = await eventoService.getTimestamp();
 
+                // get remaining slots
+                let remainingSlots;
+
+                await database.query({
+                    query: 'SELECT * FROM contract WHERE lower(name) like ? AND id_evento = ?',
+                    values: ['biglietti_evento_%', id]
+                }, function (err) {
+                    if (err) throw err;
+                }).then(async result => {
+                    result = Object.values(JSON.parse(JSON.stringify(result)));
+                    if (result.length !== 0) {
+                        // get an instance of the tickets
+                        const bigliettiSevice = await BigliettiService.getInstance({
+                            // user account address
+                            account: req.session.user.account,
+                            // host URL
+                            host: 'http://localhost:22000',
+                            // contract account address
+                            address: result[0][0].address
+                        });
+
+                        // invalidate the ticket
+                        remainingSlots = await bigliettiSevice.getPostiRimanenti();
+                    }
+                });
+
                 const evnt = {
                     id: id,
                     titolo: titolo,
@@ -79,7 +103,8 @@ router.get('/', isLoggedIn, (req, res) => {
                     data: data,
                     orario: orario,
                     artista: artista,
-                    timestamp: timestamp
+                    timestamp: timestamp,
+                    remainingSlots: remainingSlots
                 }
                 list_out.push(evnt)
             }
@@ -92,6 +117,7 @@ router.get('/', isLoggedIn, (req, res) => {
 
     })
 });
+
 
 router.get("/id/:id", isLoggedIn, (req, res) => {
 
@@ -129,6 +155,33 @@ router.get("/id/:id", isLoggedIn, (req, res) => {
             // get artist of the event
             const artista = await eventoService.getArtista();
 
+            // get remaining slots
+            let remainingSlots;
+
+            await database.query({
+                query: 'SELECT * FROM contract WHERE lower(name) like ? AND id_evento = ?',
+                values: ['biglietti_evento_%', id]
+            }, function (err) {
+                if (err) throw err;
+            }).then(async result => {
+                result = Object.values(JSON.parse(JSON.stringify(result)));
+
+                if (result.length !== 0) {
+                    // get an instance of the tickets
+                    const bigliettiSevice = await BigliettiService.getInstance({
+                        // user account address
+                        account: req.session.user.account,
+                        // host URL
+                        host: 'http://localhost:22000',
+                        // contract account address
+                        address: result[0][0].address
+                    });
+
+                    // invalidate the ticket
+                    remainingSlots = await bigliettiSevice.getPostiRimanenti();
+                }
+            });
+
             const evnt = {
                 id: id,
                 titolo: titolo,
@@ -137,7 +190,8 @@ router.get("/id/:id", isLoggedIn, (req, res) => {
                 stato: stato,
                 data: data,
                 orario: orario,
-                artista: artista
+                artista: artista,
+                remainingSlots: remainingSlots
             }
             return res.render('evento', {title: 'Dettagli Evento', result: evnt, user: req.session.user})
         } else {
@@ -150,7 +204,7 @@ router.get("/id/:id", isLoggedIn, (req, res) => {
 
 router.get("/id/:id/biglietti", isLoggedIn, isAdminOrInvalidator, async (req, res) => {
 
-    const id = req.params.id
+    const id = req.params.id;
 
     logger.info('GET BIGLIETTI DATO ID EVENTO' + id)
 
@@ -196,54 +250,92 @@ router.get("/id/:id/acquistabiglietto", isLoggedIn, async (req, res) => {
 
 router.post("/id/:id/acquistabiglietto", isLoggedIn, async (req, res) => {
 
-    const payment = paymentVerification();
-    console.log('ESITO PAGAMENTO: ' + payment);
+    const id = req.params.id;
 
-    if (payment) {
-        let ticketType = req.body.ticket_type;
-        let ticketPrice;
-        const id_evento = req.params.id;
+    await database.query({
+        query: 'SELECT * FROM contract WHERE lower(name) = ? AND id_evento = ?',
+        values: ['evento', id]
+    }, function (err) {
+        if (err) throw err;
+    }).then(async result => {
+        result = Object.values(JSON.parse(JSON.stringify(result)));
 
-        switch (ticketType) {
-            case 'platinum':
-                ticketType = 0;
-                ticketPrice = '59.99';
-                break;
-            case 'gold':
-                ticketType = 1;
-                ticketPrice = '39.99';
-                break;
-            default:
-                ticketType = 2;
-                ticketPrice = '19.99';
-        }
+        if (result.length !== 0) {
+            // get an instance of the tickets
+            const eventoService = await EventoService.getInstance({
+                // user account address
+                account: req.session.user.account,
+                // host URL
+                host: 'http://localhost:22000',
+                // contract account address
+                address: result[0][0].address
+            });
 
-        const sigillo = createTaxSeal();
+            // check the state of the event
+            const stato_evento = await eventoService.getStato();
 
-        database.query('SELECT * FROM contract WHERE lower(name) like \'biglietti_evento_%\' AND id_evento=' + id_evento, {type: database.QueryTypes.SELECT}).then(async result => {
-            if (result.length !== 0) {
-                // get an instance of the tickets
-                const bigliettiSevice = await BigliettiService.getInstance({
-                    // user account address
-                    account: req.session.user.account,
-                    // host URL
-                    host: 'http://localhost:22000',
-                    // contract account address
-                    address: result[0].address
-                });
-
-                // store the sold ticket
-                const ticket_info = await bigliettiSevice.storeItem(new Date().toISOString(), sigillo, ticketPrice, ticketType);
-                req.flash('success', 'Biglietto acquistato correttamente.');
+            if (stato_evento !== 'Attivo') {
+                req.flash('error', 'ERRORE, si possono acquistare biglietti soltanto degli eventi con stato \'Attivo\'.');
+                return res.redirect('/');
             } else {
-                req.flash('error', 'ERRORE, contratto biglietti non trovato.');
+                const payment = paymentVerification();
+                console.log('ESITO PAGAMENTO: ' + payment);
+
+                if (payment) {
+                    let ticketType = req.body.ticket_type;
+                    let ticketPrice;
+                    const id_evento = req.params.id;
+
+                    switch (ticketType) {
+                        case 'platinum':
+                            ticketType = 0;
+                            ticketPrice = '59.99';
+                            break;
+                        case 'gold':
+                            ticketType = 1;
+                            ticketPrice = '39.99';
+                            break;
+                        default:
+                            ticketType = 2;
+                            ticketPrice = '19.99';
+                    }
+
+                    const sigillo = createTaxSeal();
+
+                    database.query('SELECT * FROM contract WHERE lower(name) like \'biglietti_evento_%\' AND id_evento=' + id_evento, {type: database.QueryTypes.SELECT}).then(async result => {
+                        if (result.length !== 0) {
+                            // get an instance of the tickets
+                            const bigliettiSevice = await BigliettiService.getInstance({
+                                // user account address
+                                account: req.session.user.account,
+                                // host URL
+                                host: 'http://localhost:22000',
+                                // contract account address
+                                address: result[0].address
+                            });
+
+                            // check remaining slots
+                            const remainingSlots = await bigliettiSevice.getPostiRimanenti();
+                            if (remainingSlots < 1) {
+                                req.flash('error', 'ERRORE, non ci sono più posti disponibili per l\'evento selezionato.');
+                                return res.redirect('/');
+                            } else {
+                                // store the sold ticket
+                                const ticket_info = await bigliettiSevice.storeItem(new Date().toISOString(), sigillo, ticketPrice, ticketType);
+                                req.flash('success', 'Biglietto acquistato correttamente.');
+                            }
+                        } else {
+                            req.flash('error', 'ERRORE, contratto biglietti non trovato.');
+                        }
+                        return res.redirect('/');
+                    });
+                } else {
+                    req.flash('error', 'ERRORE, pagamento fallito.');
+                    return res.redirect('/');
+                }
             }
-            return res.redirect('/');
-        });
-    } else {
-        req.flash('error', 'ERRORE, pagamento fallito.');
-        return res.redirect('/');
-    }
+        }
+    });
 });
 
 
@@ -393,5 +485,140 @@ router.get("/id/:id/invalidaBiglietto/id/:id_biglietto", isLoggedIn, isInvalidat
     });
 });
 
+router.get("/id/:id/annullaBiglietto/id/:id_biglietto", isLoggedIn, isAdmin, async (req, res) => {
+
+    const id_evento = req.params.id;
+    const id_biglietto = req.params.id_biglietto;
+
+    // check if the state of the event is 'Annullato'
+    await database.query({
+        query: 'SELECT * FROM contract WHERE lower(name) = ? AND id_evento = ?',
+        values: ['evento', id_evento]
+    }, function (err) {
+        if (err) throw err;
+    }).then(async result => {
+        result = Object.values(JSON.parse(JSON.stringify(result)));
+
+        if (result.length !== 0) {
+            // get an instance of the tickets
+            const eventoService = await EventoService.getInstance({
+                // user account address
+                account: req.session.user.account,
+                // host URL
+                host: 'http://localhost:22000',
+                // contract account address
+                address: result[0][0].address
+            });
+
+            // get the state of the event
+            const stato_evento = await eventoService.getStato();
+
+            if (stato_evento !== 'Annullato') {
+                req.flash('error', 'ERRORE, si possono annullare soltanto i biglietti degli eventi con stato \'Annullato\'.');
+                return res.redirect('/');
+            } else {
+                // set the state of the ticket as cancelled
+                await database.query({
+                    query: 'SELECT * FROM contract WHERE lower(name) like ? AND id_evento = ?',
+                    values: ['biglietti_evento_%', id_evento]
+                }, function (err) {
+                    if (err) throw err;
+                }).then(async result => {
+                    result = Object.values(JSON.parse(JSON.stringify(result)));
+                    if (result.length !== 0) {
+                        // get an instance of the tickets
+                        const bigliettiSevice = await BigliettiService.getInstance({
+                            // user account address
+                            account: req.session.user.account,
+                            // host URL
+                            host: 'http://localhost:22000',
+                            // contract account address
+                            address: result[0][0].address
+                        });
+
+                        // cancelled the ticket
+                        const ticket_info = await bigliettiSevice.setAnnulatoBiglietto(id_biglietto);
+
+                        req.flash('success', 'Biglietto annullato correttamente.');
+                    } else {
+                        req.flash('error', 'ERRORE, contratto biglietti non trovato.');
+                    }
+
+                    return res.redirect('/');
+                });
+            }
+        } else {
+            req.flash('error', 'ERRORE, contratto evento non trovato.');
+            return res.redirect('/');
+        }
+    });
+});
+
+router.get("/id/:id/concludiEvento", isLoggedIn, isAdmin, async (req, res) => {
+
+    const id_evento = req.params.id;
+
+    await database.query({
+        query: 'SELECT * FROM contract WHERE lower(name) = ? AND id_evento = ?',
+        values: ['evento', id_evento]
+    }, function (err) {
+        if (err) throw err;
+    }).then(async result => {
+        result = Object.values(JSON.parse(JSON.stringify(result)));
+        if (result.length !== 0) {
+            // get an instance of the tickets
+            const eventoService = await EventoService.getInstance({
+                // user account address
+                account: req.session.user.account,
+                // host URL
+                host: 'http://localhost:22000',
+                // contract account address
+                address: result[0][0].address
+            });
+
+            // set evento as concluded
+            const evento_info = await eventoService.setConclusoEvento();
+
+            req.flash('success', 'Stato evento aggiornato a concluso correttamente.');
+        } else {
+            req.flash('error', 'ERRORE, contratto evento non trovato.');
+        }
+
+        return res.redirect('/');
+    });
+});
+
+router.get("/id/:id/annullaEvento", isLoggedIn, isAdmin, async (req, res) => {
+    const id_evento = req.params.id;
+
+    await database.query({
+        query: 'SELECT * FROM contract WHERE lower(name) = ? AND id_evento = ?',
+        values: ['evento', id_evento]
+    }, function (err) {
+        if (err) throw err;
+    }).then(async result => {
+        result = Object.values(JSON.parse(JSON.stringify(result)));
+        if (result.length !== 0) {
+            // get an instance of the tickets
+            const eventoService = await EventoService.getInstance({
+                // user account address
+                account: req.session.user.account,
+                // host URL
+                host: 'http://localhost:22000',
+                // contract account address
+                address: result[0][0].address
+            });
+
+            // set evento as cancelled
+            const evento_info = await eventoService.setAnnulatoEvento();
+
+            req.flash('success', 'Stato evento aggiornato ad annullato correttamente.');
+        } else {
+            req.flash('error', 'ERRORE, contratto evento non trovato.');
+        }
+
+        return res.redirect('/');
+    });
+});
 
 module.exports = router;
