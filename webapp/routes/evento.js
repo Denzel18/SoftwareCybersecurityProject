@@ -11,21 +11,13 @@ const EventoService = require('../services/EventoService');
 
 
 const Sequelize = require("sequelize");
-//const sequelize = new Sequelize('mysql://user:user@localhost:3306/cybersecurity');
-
 const database = new Sequelize('cybersecurity', 'user', 'user', {
     dialect: 'mysql',
     host: "localhost",
     port: 3306,
 })
 
-// const ContractModel = require('../models/Contract')
-// const EventModel = require('../models/Evento');
-// const TicketModel = require('../models/Biglietto');
-// const User = new Usermodel(database,Sequelize);
-
 const Contract = require('web3-eth-contract');
-const fs = require("fs");
 
 Contract.setProvider('http://127.0.0.1:22000');
 
@@ -151,7 +143,6 @@ router.get('/', isLoggedIn, async (req, res) => {
         }
         return res.render("error", {title: 'Errore', error: error, user: req.session.user});
     }
-    ;
 });
 
 

@@ -7,6 +7,7 @@ const logger = require('../logger');
 const csurf = require('csurf')
 var cookieParser = require('cookie-parser')
 var bodyParser = require('body-parser')
+const UniqueConstraintError = require('sequelize/lib/errors/validation/unique-constraint-error.js')
 
 // setup route middlewares
 var csrfProtection = csurf({cookie: true})
@@ -75,7 +76,6 @@ router.post('/new', (req, res) => {
                 if (err) {
                     throw err
                 } else {
-                    console.log(hash)
                     password_ = hash;
                     nominativo = nome + ' ' + cognome;
                     // let ts = Date.now();
@@ -84,14 +84,13 @@ router.post('/new', (req, res) => {
                     // let month = date_ob.getMonth() + 1;
                     // let year = date_ob.getFullYear();
                     // data_ = "'" + year + "-" + month + "-" + date + "'";
-                    
+
                     database.query({
-                        query : "INSERT into user (name, username, password, account) values (?,?,?,?)",
-                        values : [nominativo, username, password_, account], 
-                        type: database.QueryTypes.INSERT}).then(results => {
-                        console.log(results);
-                        if (results !== 0) {
-                            console.log(req.body);
+                        query: "INSERT into user (name, username, password, account, type) values (?,?,?,?,?)",
+                        values: [nominativo, username, password_, account, 'user'],
+                        type: database.QueryTypes.INSERT
+                    }).then(results => {
+                        if (results.length !== 0) {
                             req.flash("success", "Utente Creato");
                             return res.redirect("/login");
                         } else {
@@ -99,13 +98,18 @@ router.post('/new', (req, res) => {
                             return res.redirect("/user/new");
                         }
                     }).catch(error => {
-                        error = {
-                            status : '500',
-                            stack  : error,
-                            message : 'Errore Query'
+                        if (error instanceof UniqueConstraintError) {
+                            req.flash('error', 'Username già utilizzato.');
+                            res.redirect('/')
+                        } else {
+                            error = {
+                                status: '500',
+                                stack: error,
+                                message: 'Errore Query'
+                            }
+
+                            return res.render("error", {title: 'Errore', error: error, user: req.session.user});
                         }
-                        
-                        return res.render("error" , {title: 'Errore' , error : error, user: req.session.user});
                     });
                 }
             })
