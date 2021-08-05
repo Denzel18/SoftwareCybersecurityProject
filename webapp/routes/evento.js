@@ -415,7 +415,7 @@ router.post("/id/:id/acquistabiglietto", isLoggedIn, async (req, res) => {
                                 }
 
                                 // store the sold ticket
-                                const ticket_info = await bigliettiSevice.storeItem(new Date().toISOString(), sigillo, ticketPrice, ticketType);
+                                const ticket_info = await bigliettiSevice.storeItem(new Date().toISOString(), sigillo, ticketPrice, ticketType, req.session.user.account);
                                 req.flash('success', 'Biglietto acquistato correttamente.');
                             }
                         } else {

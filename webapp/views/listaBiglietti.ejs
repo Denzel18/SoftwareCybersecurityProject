@@ -12,6 +12,7 @@
             <th scope="col">Codice Sigillo</th>
             <th scope="col">Stato</th>
             <th scope="col">Timestamp</th>
+            <th scope="col">Indirizzo Account Intestatario</th>
             <th scope="col"></th>
             <th scope="col"></th>
         </tr>
@@ -19,7 +20,7 @@
         <tbody>
         <% if(results.length === 0) { %>
             <tr>
-                <td class="text-center" colspan="8">Non ci sono biglietti venduti per l'evento.</td>
+                <td class="text-center" colspan="9">Non ci sono biglietti venduti per l'evento.</td>
             </tr>
         <% } else { %>
             <% for(let item of results) { %>
@@ -46,6 +47,7 @@
                         <% } %>
                     </td>
                     <td><%= item.timestamp %></td>
+                    <td><%= item.userAddress %></td>
                     <% if (item.state === '0') { %>
                         <td><a class="btn btn-primary"
                                href="/evento/id/<%= id_evento %>/invalidaBiglietto/id/<%= item.id %>">Invalida

@@ -25,6 +25,7 @@ contract Biglietti {
         string prezzo;
         string cod_sigillo;
         StatoBiglietto state;
+        address userAddress;
     }
 
 
@@ -43,7 +44,7 @@ contract Biglietti {
 
     uint256 length;
 
-    function storeItem(string memory timestamp, string memory cod_sigillo, string memory prezzo, TipologiaBiglietto tipoBiglietto) public restricted {
+    function storeItem(string memory timestamp, string memory cod_sigillo, string memory prezzo, TipologiaBiglietto tipoBiglietto, address userAddress) public restricted {
         if (getPostiRimanenti() > 0) {
             lista_biglietti.push(Biglietto({
             id : length,
@@ -51,7 +52,8 @@ contract Biglietti {
             timestamp : timestamp,
             prezzo : prezzo,
             cod_sigillo : cod_sigillo,
-            typeb : tipoBiglietto
+            typeb : tipoBiglietto,
+            userAddress : userAddress
             }));
             length++;
         }

@@ -20,7 +20,7 @@ con.connect(function(err) {
     }
   });
   //-- Username: invalidator Password: invalidator
-  con.query("INSERT into user (id, name, username, password, account, type) values ('2', 'Giovanni Rossi', 'invalidator', '$2b$10$ENaa26rmvVJIyH.O4hkzQ.XlmyKv5M4UpjGNsor0hOrwU9z3mDUOe','0xed9d02e382b34818e88b88a309c7fe71e65f419d', 'invalidator');", function (err, result) {
+  con.query("INSERT into user (id, name, username, password, account, type) values ('2', 'Giovanni Rossi', 'invalidator', '$2b$10$ENaa26rmvVJIyH.O4hkzQ.XlmyKv5M4UpjGNsor0hOrwU9z3mDUOe','0xca843569e3427144cead5e4d5999a3d0ccf92b8e', 'invalidator');", function (err, result) {
     if (err) 
       throw err
     else{
@@ -28,7 +28,7 @@ con.connect(function(err) {
     }
   });
   //-- Username: user Password: user
-  con.query("INSERT into user (id, name, username, password, account, type) values ('3', 'Mario Rossi', 'user', '$2b$10$CsC/5Mcf8XTXiZkNndc5PecVJazyHRezC89DiVYAVPjbdaI8sm1fq', '0xed9d02e382b34818e88b88a309c7fe71e65f419d', 'user');", function (err, result) {
+  con.query("INSERT into user (id, name, username, password, account, type) values ('3', 'Mario Rossi', 'user', '$2b$10$CsC/5Mcf8XTXiZkNndc5PecVJazyHRezC89DiVYAVPjbdaI8sm1fq', '0x0fbdc686b912d7722dc86510934589e0aaf3b55a', 'user');", function (err, result) {
     if (err) 
       throw err
     else{
