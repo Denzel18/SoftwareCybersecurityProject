@@ -15,6 +15,12 @@ async function dropTable() {
     const drop = await Contract.drop();
 }
 
+async function storeItem(EventoService_) {
+    await EventoService_.storeItem(0, 'Concerto A', 'Ancona', '05/11/2022', '12:00', 'Artista B', 300).then(result => {
+        console.log('Evento Creato : ' + result.titolo);
+    });
+}
+
 module.exports = async function (deployer) {
 
     dropTable();
@@ -34,11 +40,10 @@ module.exports = async function (deployer) {
         address: E_.address
     });
 
-    const evento_info = await EventoService_.storeItem(0, 'Concerto A', 'Ancona', '05/11/2022', '12:00', 'Artista B', 300);
-
+    storeItem(EventoService_);
 
     console.log('Evento1 Address ' + E_.address);
     console.log('Biglietti1 Address ' + B_.address);
-    console.log('Evento Creato : ' + evento_info.titolo)
+
 
 };

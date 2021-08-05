@@ -32,18 +32,141 @@ Contract.setProvider('http://127.0.0.1:22000');
 router.get('/', isLoggedIn, async (req, res) => {
 
     logger.info('TEST EVENTO' + req.body)
-    try{
+    try {
         database.query({
-        query: "SELECT * FROM contract where lower(name)=\'evento\'",
-        type: database.QueryTypes.SELECT}).then(async results => {
-        // console.log(results)
-        if (results.length !== 0) {
-        let list_out = []
-        // for each found event
-        let i = 0;
-        console.log('ci sono n: '+results.length+' eventi')
-        
-            for (const evento of results) {
+            query: 'SELECT * FROM contract where lower(name) = ? ',
+            values: ['evento'],
+            type: database.QueryTypes.SELECT
+        }).then(async results => {
+            if (results.length !== 0) {
+                let list_out = []
+                // for each found event
+                let i = 0;
+
+                results = Object.values(JSON.parse(JSON.stringify(results)));
+                for (const evento of results[0]) {
+                    // get an instance of the event
+                    const eventoService = await EventoService.getInstance({
+                        // user account address
+                        account: req.session.user.account,
+                        // host URL
+                        host: 'http://localhost:22000',
+                        // contract account address
+                        address: evento.address
+                    });
+
+                    // get id of the event
+                    const id = await eventoService.getId();
+                    // get title of the event
+                    const titolo = await eventoService.getTitolo();
+                    // get place of the event
+                    const luogo = await eventoService.getLuogo();
+                    // get capacity of the event
+                    const capienza = await eventoService.getCapienza();
+                    // get state of the event
+                    const stato = await eventoService.getStato();
+                    // get date of the event
+                    const data = await eventoService.getData();
+                    // get time of the event
+                    const orario = await eventoService.getOrario();
+                    // get artist of the event
+                    const artista = await eventoService.getArtista();
+                    // get timestamp of the event
+                    const timestamp = await eventoService.getTimestamp();
+
+                    // get remaining slots
+                    let remainingSlots;
+
+                    await database.query({
+                        query: 'SELECT * FROM contract WHERE lower(name) like ? AND id_evento = ?',
+                        values: ['biglietti_evento_%', id]
+                    }, function (err) {
+                        if (err) throw err;
+                    }).then(async result => {
+                        result = Object.values(JSON.parse(JSON.stringify(result)));
+                        if (result.length !== 0) {
+                            // get an instance of the tickets
+                            const bigliettiSevice = await BigliettiService.getInstance({
+                                // user account address
+                                account: req.session.user.account,
+                                // host URL
+                                host: 'http://localhost:22000',
+                                // contract account address
+                                address: result[0][0].address
+                            });
+
+                            // invalidate the ticket
+                            remainingSlots = await bigliettiSevice.getPostiRimanenti();
+                        }
+                    }).catch(error => {
+                        //return res.status(400).json({ error: error.toString() });
+                        // req.flash('error', 'errore con la query');
+                        error = {
+                            status: '500',
+                            stack: error,
+                            message: 'Errore Query'
+                        }
+
+                        return res.render("error", {title: 'Errore', error: error, user: req.session.user});
+                    })
+
+                    const evnt = {
+                        id: id,
+                        titolo: titolo,
+                        luogo: luogo,
+                        capienza: capienza,
+                        stato: stato,
+                        data: data,
+                        orario: orario,
+                        artista: artista,
+                        timestamp: timestamp,
+                        remainingSlots: remainingSlots
+                    }
+                    i = i + 1;
+                    list_out.push(evnt)
+
+                }
+
+                return res.render('listaEventi', {title: 'Lista Eventi', results: list_out, user: req.session.user})
+            } else {
+                req.flash('error', 'ERRORE, nessun contratto evento trovato.');
+                return res.redirect("/");
+            }
+        }).catch(error => {
+            //return res.status(400).json({ error: error.toString() });
+            // req.flash('error', 'errore con la query');
+            error = {
+                status: '500',
+                stack: error,
+                message: 'Errore Query'
+            }
+
+            return res.render("error", {title: 'Errore', error: error, user: req.session.user});
+        })
+    } catch (error) {
+        error = {
+            status: '500',
+            stack: error,
+            message: 'Errore Query'
+        }
+        return res.render("error", {title: 'Errore', error: error, user: req.session.user});
+    }
+    ;
+});
+
+
+router.get("/id/:id", isLoggedIn, (req, res) => {
+
+    const id = req.params.id
+
+    logger.info('TEST EVENTO ID' + id)
+    try {
+        database.query({
+            query: 'SELECT * FROM contract WHERE lower(name) like ? AND id_evento = ?',
+            values: ['evento', id],
+            type: database.QueryTypes.SELECT
+        }).then(async result => {
+            if (result.length !== 0) {
                 // get an instance of the event
                 const eventoService = await EventoService.getInstance({
                     // user account address
@@ -51,8 +174,9 @@ router.get('/', isLoggedIn, async (req, res) => {
                     // host URL
                     host: 'http://localhost:22000',
                     // contract account address
-                    address: evento[i].address
+                    address: result[0][0].address
                 });
+
 
                 // get id of the event
                 const id = await eventoService.getId();
@@ -70,8 +194,6 @@ router.get('/', isLoggedIn, async (req, res) => {
                 const orario = await eventoService.getOrario();
                 // get artist of the event
                 const artista = await eventoService.getArtista();
-                // get timestamp of the event
-                const timestamp = await eventoService.getTimestamp();
 
                 // get remaining slots
                 let remainingSlots;
@@ -83,6 +205,7 @@ router.get('/', isLoggedIn, async (req, res) => {
                     if (err) throw err;
                 }).then(async result => {
                     result = Object.values(JSON.parse(JSON.stringify(result)));
+
                     if (result.length !== 0) {
                         // get an instance of the tickets
                         const bigliettiSevice = await BigliettiService.getInstance({
@@ -97,18 +220,18 @@ router.get('/', isLoggedIn, async (req, res) => {
                         // invalidate the ticket
                         remainingSlots = await bigliettiSevice.getPostiRimanenti();
                     }
-                }).catch( error => {
+                }).catch(error => {
                     //return res.status(400).json({ error: error.toString() });
                     // req.flash('error', 'errore con la query');
                     error = {
-                        status : '500',
-                        stack  : error,
-                        message : 'Errore Query'
+                        status: '500',
+                        stack: error,
+                        message: 'Errore Query'
                     }
-                    
-                    return res.render("error" , {title: 'Errore' , error : error, user: req.session.user});
-                })
-        
+
+                    return res.render("error", {title: 'Errore', error: error, user: req.session.user});
+                });
+
                 const evnt = {
                     id: id,
                     titolo: titolo,
@@ -118,155 +241,34 @@ router.get('/', isLoggedIn, async (req, res) => {
                     data: data,
                     orario: orario,
                     artista: artista,
-                    timestamp: timestamp,
                     remainingSlots: remainingSlots
                 }
-                i= i + 1 ; 
-                list_out.push(evnt)
-                
+                return res.render('evento', {title: 'Dettagli Evento', result: evnt, user: req.session.user})
+            } else {
+                req.flash('error', 'ERRORE, il contratto dell\'evento selezionato non è stato trovato.');
+                return res.redirect('/');
             }
 
-            return res.render('listaEventi', {title: 'Lista Eventi', results: list_out, user: req.session.user})
-        } else {
-            req.flash('error', 'ERRORE, nessun contratto evento trovato.');
-            return res.redirect("/");
-        }
-    }).catch( error => {
-        //return res.status(400).json({ error: error.toString() });
-        // req.flash('error', 'errore con la query');
-        error = {
-            status : '500',
-            stack  : error,
-            message : 'Errore Query'
-        }
-        
-        return res.render("error" , {title: 'Errore' , error : error, user: req.session.user});
-    })
-    }catch(error){
-        error = {
-            status : '500',
-            stack  : error,
-            message : 'Errore Query'
-        }
-        return res.render("error" , {title: 'Errore' , error : error, user: req.session.user});
-    };
-});
-
-
-router.get("/id/:id", isLoggedIn, (req, res) => {
-
-    const id = req.params.id
-
-    logger.info('TEST EVENTO ID' + id)
-try{
-    database.query({
-        query: 'SELECT * FROM contract WHERE lower(name) like ? AND id_evento = ?',
-        values: ['evento', id],
-        type: database.QueryTypes.SELECT}).then(async result => {
-        if (result.length !== 0) {
-            // console.log('result '+result[0][0].address)
-            // get an instance of the event
-            const eventoService = await EventoService.getInstance({
-                // user account address
-                account: req.session.user.account,
-                // host URL
-                host: 'http://localhost:22000',
-                // contract account address
-                address: result[0][0].address
-            });
-
-
-            // get id of the event
-            const id = await eventoService.getId();
-            // get title of the event
-            const titolo = await eventoService.getTitolo();
-            // get place of the event
-            const luogo = await eventoService.getLuogo();
-            // get capacity of the event
-            const capienza = await eventoService.getCapienza();
-            // get state of the event
-            const stato = await eventoService.getStato();
-            // get date of the event
-            const data = await eventoService.getData();
-            // get time of the event
-            const orario = await eventoService.getOrario();
-            // get artist of the event
-            const artista = await eventoService.getArtista();
-
-            // get remaining slots
-            let remainingSlots;
-
-            await database.query({
-                query: 'SELECT * FROM contract WHERE lower(name) like ? AND id_evento = ?',
-                values: ['biglietti_evento_%', id]
-            }, function (err) {
-                if (err) throw err;
-            }).then(async result => {
-                result = Object.values(JSON.parse(JSON.stringify(result)));
-
-                if (result.length !== 0) {
-                    // get an instance of the tickets
-                    const bigliettiSevice = await BigliettiService.getInstance({
-                        // user account address
-                        account: req.session.user.account,
-                        // host URL
-                        host: 'http://localhost:22000',
-                        // contract account address
-                        address: result[0][0].address
-                    });
-
-                    // invalidate the ticket
-                    remainingSlots = await bigliettiSevice.getPostiRimanenti();
-                }
-            }).catch( error => {
-                //return res.status(400).json({ error: error.toString() });
-                // req.flash('error', 'errore con la query');
-                error = {
-                    status : '500',
-                    stack  : error,
-                    message : 'Errore Query'
-                }
-                
-                return res.render("error" , {title: 'Errore' , error : error, user: req.session.user});
-            });
-
-            const evnt = {
-                id: id,
-                titolo: titolo,
-                luogo: luogo,
-                capienza: capienza,
-                stato: stato,
-                data: data,
-                orario: orario,
-                artista: artista,
-                remainingSlots: remainingSlots
+        }).catch(error => {
+            //return res.status(400).json({ error: error.toString() });
+            // req.flash('error', 'errore con la query');
+            error = {
+                status: '500',
+                stack: error,
+                message: 'Errore Query'
             }
-            return res.render('evento', {title: 'Dettagli Evento', result: evnt, user: req.session.user})
-        } else {
-            req.flash('error', 'ERRORE, il contratto dell\'evento selezionato non è stato trovato.');
-            return res.redirect('/');
+
+            return res.render("error", {title: 'Errore', error: error, user: req.session.user});
+        })
+
+    } catch (error) {
+        error = {
+            status: '500',
+            stack: error,
+            message: 'Errore Query'
         }
 
-    }).catch( error => {
-        //return res.status(400).json({ error: error.toString() });
-        // req.flash('error', 'errore con la query');
-        error = {
-            status : '500',
-            stack  : error,
-            message : 'Errore Query'
-        }
-        
-        return res.render("error" , {title: 'Errore' , error : error, user: req.session.user});
-    })
-
-}catch(error){
-        error = {
-            status : '500',
-            stack  : error,
-            message : 'Errore Query'
-        }
-        
-        return res.render("error" , {title: 'Errore' , error : error, user: req.session.user});
+        return res.render("error", {title: 'Errore', error: error, user: req.session.user});
     }
 });
 
@@ -276,14 +278,13 @@ router.get("/id/:id/biglietti", isLoggedIn, isAdminOrInvalidator, async (req, re
 
     logger.info('GET BIGLIETTI DATO ID EVENTO' + id)
 
-    try{
+    try {
         database.query({
-            query: "SELECT * FROM contract WHERE lower(name) like ? AND id_evento= ?",
-            values: ['biglietti_evento_%',id],
-            type: database.QueryTypes.SELECT}).then(async result => {
-    
+            query: "SELECT * FROM contract WHERE lower(name) like ? AND id_evento = ?",
+            values: ['biglietti_evento_%', id],
+            type: database.QueryTypes.SELECT
+        }).then(async result => {
             if (result.length !== 0) {
-                console.log('result biglietti : ' + result[0][0].address)     
                 // get an instance of the tickets
                 const bigliettiSevice = await BigliettiService.getInstance({
                     // user account address
@@ -293,9 +294,9 @@ router.get("/id/:id/biglietti", isLoggedIn, isAdminOrInvalidator, async (req, re
                     // contract account address
                     address: result[0][0].address
                 });
-    
+
                 const biglietti = await bigliettiSevice.getBiglietti();
-    
+
                 return res.render('listaBiglietti', {
                     title: 'Biglietti Venduti',
                     results: biglietti,
@@ -308,21 +309,21 @@ router.get("/id/:id/biglietti", isLoggedIn, isAdminOrInvalidator, async (req, re
             }
         }).catch(error => {
             error = {
-                status : '500',
-                stack  : error,
-                message : 'Errore Query'
+                status: '500',
+                stack: error,
+                message: 'Errore Query'
             }
-            
-            return res.render("error" , {title: 'Errore' , error : error, user: req.session.user});
+
+            return res.render("error", {title: 'Errore', error: error, user: req.session.user});
         });
-    }catch(error){
+    } catch (error) {
         error = {
-            status : '500',
-            stack  : error,
-            message : 'Errore Query'
+            status: '500',
+            stack: error,
+            message: 'Errore Query'
         }
-        
-        return res.render("error" , {title: 'Errore' , error : error, user: req.session.user});
+
+        return res.render("error", {title: 'Errore', error: error, user: req.session.user});
 
     }
 
@@ -344,71 +345,50 @@ router.get("/id/:id/acquistabiglietto", isLoggedIn, async (req, res) => {
 router.post("/id/:id/acquistabiglietto", isLoggedIn, async (req, res) => {
 
     const id = req.params.id;
-try{
-    await database.query({
-        query: 'SELECT * FROM contract WHERE lower(name) = ? AND id_evento = ?',
-        values: ['evento', id]
-    }, function (err) {
-        if (err) throw err;
-    }).then(async result => {
-        result = Object.values(JSON.parse(JSON.stringify(result)));
+    try {
+        await database.query({
+            query: 'SELECT * FROM contract WHERE lower(name) = ? AND id_evento = ?',
+            values: ['evento', id]
+        }, function (err) {
+            if (err) throw err;
+        }).then(async result => {
+            result = Object.values(JSON.parse(JSON.stringify(result)));
 
-        if (result.length !== 0) {
-            // get an instance of the tickets
-            const eventoService = await EventoService.getInstance({
-                // user account address
-                account: req.session.user.account,
-                // host URL
-                host: 'http://localhost:22000',
-                // contract account address
-                address: result[0][0].address
-            });
+            if (result.length !== 0) {
+                // get an instance of the tickets
+                const eventoService = await EventoService.getInstance({
+                    // user account address
+                    account: req.session.user.account,
+                    // host URL
+                    host: 'http://localhost:22000',
+                    // contract account address
+                    address: result[0][0].address
+                });
 
-            // check the state of the event
-            const stato_evento = await eventoService.getStato();
+                // check the state of the event
+                const stato_evento = await eventoService.getStato();
 
-            if (stato_evento !== 'Attivo') {
-                req.flash('error', 'ERRORE, si possono acquistare biglietti soltanto degli eventi con stato \'Attivo\'.');
-                return res.redirect('/');
-            } else {
-                const payment = paymentVerification();
-                console.log('ESITO PAGAMENTO: ' + payment);
-
-                if (payment) {
-                    let ticketType = req.body.ticket_type;
-                    let ticketPrice;
+                if (stato_evento !== 'Attivo') {
+                    req.flash('error', 'ERRORE, si possono acquistare biglietti soltanto degli eventi con stato \'Attivo\'.');
+                    return res.redirect('/');
+                } else {
                     const id_evento = req.params.id;
 
-                    switch (ticketType) {
-                        case 'platinum':
-                            ticketType = 0;
-                            ticketPrice = '59.99';
-                            break;
-                        case 'gold':
-                            ticketType = 1;
-                            ticketPrice = '39.99';
-                            break;
-                        default:
-                            ticketType = 2;
-                            ticketPrice = '19.99';
-                    }
-
-                    const sigillo = createTaxSeal();
-
                     database.query({
-                        query: "SELECT * FROM contract WHERE lower(name) like ? AND id_evento= ?",
+                        query: "SELECT * FROM contract WHERE lower(name) like ? AND id_evento = ?",
                         values: ['biglietti_evento_%', id_evento],
-                        type: database.QueryTypes.SELECT}).then(async result => {
-                            if (result.length !== 0) {
-                                // get an instance of the tickets
-                                const bigliettiSevice = await BigliettiService.getInstance({
-                                    // user account address
-                                    account: req.session.user.account,
-                                    // host URL
-                                    host: 'http://localhost:22000',
-                                    // contract account address
-                                    address: result[0][0].address
-                                });
+                        type: database.QueryTypes.SELECT
+                    }).then(async result => {
+                        if (result.length !== 0) {
+                            // get an instance of the tickets
+                            const bigliettiSevice = await BigliettiService.getInstance({
+                                // user account address
+                                account: req.session.user.account,
+                                // host URL
+                                host: 'http://localhost:22000',
+                                // contract account address
+                                address: result[0][0].address
+                            });
 
                             // check remaining slots
                             const remainingSlots = await bigliettiSevice.getPostiRimanenti();
@@ -416,6 +396,33 @@ try{
                                 req.flash('error', 'ERRORE, non ci sono più posti disponibili per l\'evento selezionato.');
                                 return res.redirect('/');
                             } else {
+                                const payment = paymentVerification();
+                                console.log('ESITO PAGAMENTO: ' + payment);
+
+                                let ticketType, ticketPrice, sigillo;
+                                if (payment) {
+                                    ticketType = req.body.ticket_type;
+
+                                    switch (ticketType) {
+                                        case 'platinum':
+                                            ticketType = 0;
+                                            ticketPrice = '59.99';
+                                            break;
+                                        case 'gold':
+                                            ticketType = 1;
+                                            ticketPrice = '39.99';
+                                            break;
+                                        default:
+                                            ticketType = 2;
+                                            ticketPrice = '19.99';
+                                    }
+
+                                    sigillo = createTaxSeal();
+                                } else {
+                                    req.flash('error', 'ERRORE, pagamento fallito.');
+                                    return res.redirect('/');
+                                }
+
                                 // store the sold ticket
                                 const ticket_info = await bigliettiSevice.storeItem(new Date().toISOString(), sigillo, ticketPrice, ticketType);
                                 req.flash('success', 'Biglietto acquistato correttamente.');
@@ -426,38 +433,35 @@ try{
                         return res.redirect('/');
                     }).catch(error => {
                         error = {
-                            status : '500',
-                            stack  : error,
-                            message : 'Errore Query'
+                            status: '500',
+                            stack: error,
+                            message: 'Errore Query'
                         }
-                        
-                        return res.render("error" , {title: 'Errore' , error : error, user: req.session.user});
+
+                        return res.render("error", {title: 'Errore', error: error, user: req.session.user});
                     });
-                } else {
-                    req.flash('error', 'ERRORE, pagamento fallito.');
-                    return res.redirect('/');
+
                 }
             }
-        }
-    }).catch(error => {
-        error = {
-            status : '500',
-            stack  : error,
-            message : 'Errore Query'
-        }
-        
-        return res.render("error" , {title: 'Errore' , error : error, user: req.session.user});
-    });
+        }).catch(error => {
+            error = {
+                status: '500',
+                stack: error,
+                message: 'Errore Query'
+            }
 
-}catch(error){
-    error = {
-        status : '500',
-        stack  : error,
-        message : 'Errore Query'
+            return res.render("error", {title: 'Errore', error: error, user: req.session.user});
+        });
+
+    } catch (error) {
+        error = {
+            status: '500',
+            stack: error,
+            message: 'Errore Query'
+        }
+
+        return res.render("error", {title: 'Errore', error: error, user: req.session.user});
     }
-    
-    return res.render("error" , {title: 'Errore' , error : error, user: req.session.user});
-}
 });
 
 
@@ -476,12 +480,12 @@ router.get('/newevento', isLoggedIn, isAdmin, (req, res) => {
         });
     }).catch(error => {
         error = {
-            status : '500',
-            stack  : error,
-            message : 'Errore Query'
+            status: '500',
+            stack: error,
+            message: 'Errore Query'
         }
-        
-        return res.render("error" , {title: 'Errore' , error : error, user: req.session.user});
+
+        return res.render("error", {title: 'Errore', error: error, user: req.session.user});
     });
 });
 
@@ -536,7 +540,7 @@ router.post('/newevento', isLoggedIn, isAdmin, async (req, res) => {
     //Fase 3: inserimento dell'address del contratto Evento nel DB
 
     await database.query({
-        query: "INSERT INTO contract (name, address, id_evento) VALUES ('evento',?, ?)",
+        query: "INSERT INTO contract (name, address, id_evento) VALUES ('evento', ?, ?)",
         values: [e_savedAddress, id]
     }, function (err, result) {
         if (err) throw err;
@@ -545,13 +549,13 @@ router.post('/newevento', isLoggedIn, isAdmin, async (req, res) => {
         logger.info("1 record inserted, ID:" + eventId);
     }).catch(error => {
         error = {
-            status : '500',
-            stack  : error,
-            message : 'Errore Query'
+            status: '500',
+            stack: error,
+            message: 'Errore Query'
         }
-        
-        return res.render("error" , {title: 'Errore' , error : error, user: req.session.user});
-    });;
+
+        return res.render("error", {title: 'Errore', error: error, user: req.session.user});
+    });
 
     //Fase 4: creazione e deploy del contratto Biglietti associato all'evento appena creato
 
@@ -576,21 +580,22 @@ router.post('/newevento', isLoggedIn, isAdmin, async (req, res) => {
     let nome_contratto = 'biglietti_evento_' + global.eventId;
     logger.info('Inserendo: ' + nome_contratto);
     await database.query({
-        query: "INSERT INTO contract (name, address, id_evento) VALUES (?,?, ?)",
+        query: "INSERT INTO contract (name, address, id_evento) VALUES (?, ?, ?)",
         values: [nome_contratto, b_savedAddress, id]
     }, function (err, result) {
         if (err) throw err;
         logger.info("1 record inserted, ID:" + result.insertId);
     }).catch(error => {
         error = {
-            status : '500',
-            stack  : error,
-            message : 'Errore Query'
+            status: '500',
+            stack: error,
+            message: 'Errore Query'
         }
-        
-        return res.render("error" , {title: 'Errore' , error : error, user: req.session.user});
-    });;
 
+        return res.render("error", {title: 'Errore', error: error, user: req.session.user});
+    });
+
+    req.flash('success', 'Evento creato.');
     return res.redirect('/');
 });
 
@@ -629,13 +634,14 @@ router.get("/id/:id/invalidaBiglietto/id/:id_biglietto", isLoggedIn, isInvalidat
         return res.redirect('/');
     }).catch(error => {
         error = {
-            status : '500',
-            stack  : error,
-            message : 'Errore Query'
+            status: '500',
+            stack: error,
+            message: 'Errore Query'
         }
-        
-        return res.render("error" , {title: 'Errore' , error : error, user: req.session.user});
-    });;
+
+        return res.render("error", {title: 'Errore', error: error, user: req.session.user});
+    });
+    ;
 });
 
 router.get("/id/:id/annullaBiglietto/id/:id_biglietto", isLoggedIn, isAdmin, async (req, res) => {
@@ -706,13 +712,14 @@ router.get("/id/:id/annullaBiglietto/id/:id_biglietto", isLoggedIn, isAdmin, asy
         }
     }).catch(error => {
         error = {
-            status : '500',
-            stack  : error,
-            message : 'Errore Query'
+            status: '500',
+            stack: error,
+            message: 'Errore Query'
         }
-        
-        return res.render("error" , {title: 'Errore' , error : error, user: req.session.user});
-    });;
+
+        return res.render("error", {title: 'Errore', error: error, user: req.session.user});
+    });
+    ;
 });
 
 router.get("/id/:id/concludiEvento", isLoggedIn, isAdmin, async (req, res) => {
@@ -748,12 +755,12 @@ router.get("/id/:id/concludiEvento", isLoggedIn, isAdmin, async (req, res) => {
         return res.redirect('/');
     }).catch(error => {
         error = {
-            status : '500',
-            stack  : error,
-            message : 'Errore Query'
+            status: '500',
+            stack: error,
+            message: 'Errore Query'
         }
-        
-        return res.render("error" , {title: 'Errore' , error : error, user: req.session.user});
+
+        return res.render("error", {title: 'Errore', error: error, user: req.session.user});
     });
 });
 
@@ -789,12 +796,12 @@ router.get("/id/:id/annullaEvento", isLoggedIn, isAdmin, async (req, res) => {
         return res.redirect('/');
     }).catch(error => {
         error = {
-            status : '500',
-            stack  : error,
-            message : 'Errore Query'
+            status: '500',
+            stack: error,
+            message: 'Errore Query'
         }
-        
-        return res.render("error" , {title: 'Errore' , error : error, user: req.session.user});
+
+        return res.render("error", {title: 'Errore', error: error, user: req.session.user});
     });
 });
 

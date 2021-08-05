@@ -40,5 +40,4 @@ const Contract = sequelize.define('Contract',
 
 // Create all the defined tables in the specified database
 Contract.sync().then(() => console.log('Table \'' + Contract.tableName + '\' has been successfully created.')).catch(error => console.log('The following error occured: ', error));
-// Contract.sync({ force: true }).then(() => console.log('Table \'' + Contract.tableName + '\' has been successfully created.')).catch(error => console.log('The following error occured: ', error));
 module.exports = Contract;
