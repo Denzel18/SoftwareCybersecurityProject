@@ -23,7 +23,7 @@ Contract.setProvider('http://127.0.0.1:22000');
 
 router.get('/', isLoggedIn, async (req, res) => {
 
-    logger.info('TEST EVENTO' + req.body)
+    logger.info('Accesso lista eventi. Account:' + req.session.user.account)
     try {
         database.query({
             query: 'SELECT * FROM contract where lower(name) = ? ',
@@ -150,7 +150,8 @@ router.get("/id/:id", isLoggedIn, (req, res) => {
 
     const id = req.params.id
 
-    logger.info('TEST EVENTO ID' + id)
+    logger.info('Accesso dettagli evento ID: ' + id + '. Account:' + req.session.user.account);
+
     try {
         database.query({
             query: 'SELECT * FROM contract WHERE lower(name) like ? AND id_evento = ?',
@@ -267,7 +268,7 @@ router.get("/id/:id/biglietti", isLoggedIn, isAdminOrInvalidator, async (req, re
 
     const id = req.params.id;
 
-    logger.info('GET BIGLIETTI DATO ID EVENTO' + id)
+    logger.info('Accesso lista biglietti, evento ID: ' + id + '. Account: ' + req.session.user.account);
 
     try {
         database.query({
@@ -323,6 +324,10 @@ router.get("/id/:id/biglietti", isLoggedIn, isAdminOrInvalidator, async (req, re
 
 router.get("/id/:id/acquistabiglietto", isLoggedIn, async (req, res) => {
 
+    const id = req.params.id;
+
+    logger.info('Accesso pagina acquista biglietto, evento ID: ' + id + '. Account: ' + req.session.user.account);
+
     return res.render('acquistoBiglietto', {
         title: 'Acquista Biglietto',
         id_evento: req.params.id,
@@ -336,6 +341,9 @@ router.get("/id/:id/acquistabiglietto", isLoggedIn, async (req, res) => {
 router.post("/id/:id/acquistabiglietto", isLoggedIn, async (req, res) => {
 
     const id = req.params.id;
+
+    logger.info('Acquisto biglietto, evento ID: ' + id + '. Account: ' + req.session.user.account);
+
     try {
         await database.query({
             query: 'SELECT * FROM contract WHERE lower(name) = ? AND id_evento = ?',
@@ -388,7 +396,7 @@ router.post("/id/:id/acquistabiglietto", isLoggedIn, async (req, res) => {
                                 return res.redirect('/');
                             } else {
                                 const payment = paymentVerification();
-                                console.log('ESITO PAGAMENTO: ' + payment);
+                                logger.info('Esito Pagamento: ' + payment);
 
                                 let ticketType, ticketPrice, sigillo;
                                 if (payment) {
@@ -457,7 +465,8 @@ router.post("/id/:id/acquistabiglietto", isLoggedIn, async (req, res) => {
 
 
 router.get('/newevento', isLoggedIn, isAdmin, (req, res) => {
-    logger.info('Form di creazione evento');
+
+    logger.info('Accesso creazione evento. Account: ' + req.session.user.account);
 
     let nextEventId;
     database.query('SELECT * FROM contract where lower(name)=\'evento\'', {type: database.QueryTypes.SELECT}).then(async results => {
@@ -482,7 +491,9 @@ router.get('/newevento', isLoggedIn, isAdmin, (req, res) => {
 
 
 router.post('/newevento', isLoggedIn, isAdmin, async (req, res) => {
-    logger.info('Inizio Salvataggio Evento ...')
+
+    logger.info('Creazione evento. Account: ' + req.session.user.account);
+
     const id = req.body.id;
     const titolo = req.body.titolo;
     const luogo = req.body.luogo;
@@ -490,8 +501,6 @@ router.post('/newevento', isLoggedIn, isAdmin, async (req, res) => {
     const orario = req.body.orario;
     const artista = req.body.artista;
     const capienza = req.body.capienza;
-
-    logger.info(" Test Parametri:" + titolo + ", " + luogo + ", " + data + ", ecc...")
 
     //TODO: controlli sugli attributi dell'evento
 
@@ -595,6 +604,8 @@ router.get("/id/:id/invalidaBiglietto/id/:id_biglietto", isLoggedIn, isInvalidat
     const id_evento = req.params.id;
     const id_biglietto = req.params.id_biglietto;
 
+    logger.info('Invalidazione biglietto ID: ' + id_biglietto + ', evento ID: ' + id_evento + '. Account: ' + req.session.user.account);
+
     await database.query({
         query: 'SELECT * FROM contract WHERE lower(name) like ? AND id_evento = ?',
         values: ['biglietti_evento_%', id_evento]
@@ -632,13 +643,14 @@ router.get("/id/:id/invalidaBiglietto/id/:id_biglietto", isLoggedIn, isInvalidat
 
         return res.render("error", {title: 'Errore', error: error, user: req.session.user});
     });
-    ;
 });
 
 router.get("/id/:id/annullaBiglietto/id/:id_biglietto", isLoggedIn, isAdmin, async (req, res) => {
 
     const id_evento = req.params.id;
     const id_biglietto = req.params.id_biglietto;
+
+    logger.info('Annullamento biglietto ID: ' + id_biglietto + ', evento ID: ' + id_evento + '. Account: ' + req.session.user.account);
 
     // check if the state of the event is 'Annullato'
     await database.query({
@@ -710,12 +722,13 @@ router.get("/id/:id/annullaBiglietto/id/:id_biglietto", isLoggedIn, isAdmin, asy
 
         return res.render("error", {title: 'Errore', error: error, user: req.session.user});
     });
-    ;
 });
 
 router.get("/id/:id/concludiEvento", isLoggedIn, isAdmin, async (req, res) => {
 
     const id_evento = req.params.id;
+
+    logger.info('Conclusione evento ID: ' + id_evento + '. Account: ' + req.session.user.account);
 
     await database.query({
         query: 'SELECT * FROM contract WHERE lower(name) = ? AND id_evento = ?',
@@ -757,6 +770,8 @@ router.get("/id/:id/concludiEvento", isLoggedIn, isAdmin, async (req, res) => {
 
 router.get("/id/:id/annullaEvento", isLoggedIn, isAdmin, async (req, res) => {
     const id_evento = req.params.id;
+
+    logger.info('Annullamento evento ID: ' + id_evento + '. Account: ' + req.session.user.account);
 
     await database.query({
         query: 'SELECT * FROM contract WHERE lower(name) = ? AND id_evento = ?',
