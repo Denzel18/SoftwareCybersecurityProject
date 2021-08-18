@@ -72,12 +72,8 @@ cd /network/<nome-della-rete>
 
 ## Truffle
 
-Per effettuare il *deploy* dei contratti sulla blockchain *Quorum* abbiamo utilizzato [*Truffle*](https://www.trufflesuite.com/) nella versione 4.1.16. Risultano però presenti alcuni bug che impediscono il corretto funzionamento costantantemente. In caso di problematiche eseguire 
-
-```bash
-rm -r build/   
-truffle migrate --reset 
-```
+Per effettuare la compilazione e il *deploy* dei contratti sulla blockchain *Quorum* abbiamo utilizzato [*Truffle*](https://www.trufflesuite.com/) nella versione 4.1.16. 
+Il deploy dei contratti di default attraverso Truffle è stato utilizzato soltanto in fase di sviluppo, evitandolo poi nel rilascio, in quanto erano presenti alcuni bug che impedivano il corretto funzionamento ad ogni esecuzione della webapp. Per effettuare il deploy del contratto di default è stato realizzato un file JS a parte, come descritto nei passi seguenti.
 
 ## Step by Step 
 
@@ -93,11 +89,11 @@ truffle migrate --reset
 		- **password: user**
 4. Eseguire `npm install` per **installare le dipendenze** del progetto
 5. Eseguire `node create_database.js` dentro la cartella *webapp* per **creare il DB** utilizzato dalla webapp
-6. Eseguire `truffle migrate --reset` dentro la root della repository per **effettuare il deploy dei contratti**
-	- ATT: Assicurarsi che il deploy di Truffle sia effettivamente avvenuto (viene restituita la console dal comando precedentemente lanciato), altrimenti premere Ctrl + C e riprovare.  
-7. Eseguire `npm start` dentro la cartella *webapp* per **avviare l'applicazione WEB**
+6. Eseguire `truffle migrate --reset` dentro la root della repository per **effettuare la compilazione dei contratti** (il deploy dei contratti utilizzando Truffle è stato sfruttando soltanto in fase di sviluppo)
+7. Eseguire `npm start` dentro la cartella *webapp* per **avviare l'applicazione WEB** (lasciare in esecuzione l'applicazione WEB ed eseguire i passi rimanenti da un'altra finestra del terminale)
 8. Eseguire `node  insert_user.js` dentro la cartella *webapp* per **aggiungere gli utenti** di default
-9. **Enjoy the webapp!**
+9. Eseguire `node  insert_demo_event.js` dentro la cartella *webapp* per **effettuare il deploy del contratto** di default
+10. **Enjoy the webapp!**
 
 ## Tipologie di utenti e loro funzioni
 
