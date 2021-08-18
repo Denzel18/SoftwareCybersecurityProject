@@ -109,12 +109,15 @@ Il deploy dei contratti di default attraverso Truffle è stato utilizzato soltan
 
 ## Relazione 
 
-La [relazione](https://github.com/) è visionabile, per ulteriori dettagli implementativi e di progettazione 
+La [relazione](https://github.com/emanueleincicco/SoftwareCybersecurityProject/blob/616177e300f6c792e7a7eb1dbab916a624edea31/Relazione_Cyber_Security.pdf) è visionabile, per ulteriori dettagli implementativi e di progettazione 
 
 
 ## License
 
 Distributed under the MIT License. See `LICENSE` for more information.
+
+## Author 
+Bernovschi D., Incicco E., Miscia F., Fratini L., Pinciaroli A. 
 
 
 ## Contact
