@@ -3,8 +3,10 @@
     <div class="row mt-4">
         <div class="col-sm-12">
             <h1>Inserisci dati evento</h1>
+            <p><i>N.B. Tutti i campi sono obbligatori</i></p>
 
-            <form action="/evento/newevento" method="POST">
+
+            <form action="/evento/newevento" name="modulo" method="POST" onsubmit="return false">
 
                 <input type="hidden" id="id" name="id" value="<%= id %>">
 
@@ -18,7 +20,7 @@
                 </div>
                 <div class="form-group">
                     <label for="date">Data</label>
-                    <input type="text" name="date" class="form-control" id="date" placeholder="gg/mm/aaaa">
+                    <input type="text" name="date" class="form-control" id="date" placeholder="YYYY-MM-DD">
                 </div>
                 <div class="form-group">
                     <label for="orario">Orario</label>
@@ -33,7 +35,7 @@
                     <input type="text" name="capienza" class="form-control" id="capienza" placeholder="500">
                 </div>
                 <input type="hidden" name="_csrf" value="<%= csrfToken %>">
-                <button type="submit" class="btn btn-primary">Submit</button>
+                <button type="submit" class="btn btn-primary" onclick="controlloForm()">Submit</button>
             </form>
         </div>
     </div>
@@ -48,3 +50,34 @@
 <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/js/bootstrap.min.js"
         integrity="sha384-OgVRvuATP1z7JjHLkuOU7Xw704+h835Lr+6QL9UvYjZE3Ipu6Tp75j7Bh/kR0JKI"
         crossorigin="anonymous"></script>
+
+<script type="text/javascript">
+
+    function present(input) {
+        if (input.length == 0) return false;
+        return true;
+    }
+    //Se vengono superati i controlli abilita l'inoltro del form (di default disabilitato)
+    function controlloForm() {
+
+
+        var title = document.modulo.titolo.value;
+        var place = document.modulo.luogo.value;
+        var artist = document.modulo.artista.value;
+        var date = document.modulo.date.value;
+        var time = document.modulo.orario.value;
+        var capacity = document.modulo.capienza;
+        var only_num_pattern = /^\d+$/;
+        var no_num_pattern = /^([a-zA-Z\xE0\xE8\xE9\xF9\xF2\xEC\x27]\s?)+$/; //no numeri
+        var dateRegex = /^(?:(?=[02468][048]00|[13579][26]00|\d{2}0[48]|\d{2}[2468][048]|\d{2}[13579][26])\d{4})-(?:(?:01|03|05|07|08|10|12)-(?:[0-2]\d|3[0-1])|(?:04|06|09|11)-(?:[0-2]\d|30)|02-[0-2]\d)|(?:(?![02468][048]00|[13579][26]00|\d{2}0[48]|\d{2}[2468][048]|\d{2}[13579][26])\d{4})-(?:(?:01|03|05|07|08|10|12)-(?:[0-2]\d|3[0-1])|(?:04|06|09|11)-(?:[0-2]\d|30)|02-(?:[0-1]\d|2[0-8]))$/;
+        var err_conditions = (!no_num_pattern.test(title)) || (!no_num_pattern.test(place)) || (!no_num_pattern.test(artist)) || (!dateRegex.test(date)) ||
+            !( (present(title)) && (present(place)) && (present(date)) && (present(time)) && (present(artist)) && (present(capacity)) );
+        if ( err_conditions ) {
+            //document.getElementById("invia").setAttribute("disabled",true);
+            //document.modulo.invia.disabled.value == true;
+            alert("Ricontrolla i dati inseriti!");
+
+        }
+        else document.modulo.submit();
+    }
+</script>

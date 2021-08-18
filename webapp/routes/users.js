@@ -8,6 +8,8 @@ const csurf = require('csurf')
 var cookieParser = require('cookie-parser')
 var bodyParser = require('body-parser')
 const UniqueConstraintError = require('sequelize/lib/errors/validation/unique-constraint-error.js')
+const Web3Utils = require('web3-utils');
+
 
 // setup route middlewares
 var csrfProtection = csurf({cookie: true})
@@ -19,6 +21,7 @@ const bcrypt = require("bcrypt");
 const User = require('../models/User');
 
 const Sequelize = require("sequelize");
+
 
 const database = new Sequelize('cybersecurity', 'user', 'user', {
     dialect: 'mysql',
@@ -63,9 +66,18 @@ router.post('/new', (req, res) => {
 
     nome = req.body.nome;
     cognome = req.body.cognome;
-    account = req.body.account;
+    account = String(req.body.account);
     username = req.body.username;
     password = req.body.password;
+
+    if (!Web3Utils.isAddress(account)) {
+
+        console.log('Errore: Account non valido')
+        req.flash('error', 'Indirizzo Wallet non valido');
+        res.redirect('/user/new');
+    }
+
+    else {
 
     const saltRounds = 10;
     bcrypt.genSalt(saltRounds, function (err, salt) {
@@ -115,7 +127,7 @@ router.post('/new', (req, res) => {
             })
         }
     })
-});
+}});
 
 
 module.exports = router;
